@@ -1,0 +1,13 @@
+{
+  "name": "sigom",
+  "private": true,
+  "workspaces": [
+    "sigom-api"
+  ],
+  "scripts": {
+    "lint": "cd sigom-api && npm run lint",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "typecheck": "cd sigom-api && npm run typecheck"
+  }
+}
