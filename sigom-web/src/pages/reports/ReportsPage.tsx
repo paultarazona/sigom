@@ -12,7 +12,7 @@ export function ReportsPage() {
   const avgTime = useAverageAttentionTime()
 
   return (
-    <div className="p-6">
+    <div className="page">
       <PageHeader
         description="Métricas y estadísticas operativas del sistema"
       />
@@ -21,8 +21,8 @@ export function ReportsPage() {
       {isError && <ErrorState onRetry={refetch} />}
 
       {data && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <>
+          <div className="stat-grid">
             <StatCard
               title="Órdenes pendientes"
               value={data.pending}
@@ -49,14 +49,14 @@ export function ReportsPage() {
             />
           </div>
 
-          <div className="rounded-xl border border-[#C4D0D8] bg-white p-8 shadow-sm">
+          <div className="card">
             <EmptyState
               icon={BarChart2}
               title="Gráficos en construcción"
               description="Los reportes visuales estarán disponibles en la próxima versión."
             />
           </div>
-        </div>
+        </>
       )}
     </div>
   )

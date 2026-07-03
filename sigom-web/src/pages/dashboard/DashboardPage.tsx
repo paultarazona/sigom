@@ -121,7 +121,7 @@ export function DashboardPage() {
           </button>
         </div>
 
-        {workOrders.isLoading && <LoadingState rows={5} />}
+        {workOrders.isLoading && <LoadingState variant="overlay" />}
         {workOrders.isError && (
           <ErrorState
             message="No se pudieron cargar las órdenes recientes."

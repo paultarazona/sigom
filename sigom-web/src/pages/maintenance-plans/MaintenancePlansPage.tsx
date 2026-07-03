@@ -54,7 +54,7 @@ export function MaintenancePlansPage() {
       />
 
       <div className="card">
-        {isLoading && <LoadingState rows={6} />}
+        {isLoading && <LoadingState variant="overlay" />}
         {isError && <ErrorState onRetry={refetch} />}
         {data && data.data.length === 0 && (
           <EmptyState

@@ -52,7 +52,7 @@ export function InspectionsPage() {
       />
 
       <div className="card">
-        {isLoading && <LoadingState rows={8} />}
+        {isLoading && <LoadingState variant="overlay" />}
         {isError && <ErrorState onRetry={refetch} />}
         {data && (
           <DataTable

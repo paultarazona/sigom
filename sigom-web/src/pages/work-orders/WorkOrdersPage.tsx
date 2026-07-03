@@ -118,7 +118,7 @@ export function WorkOrdersPage() {
       </div>
 
       <div className="card">
-        {isLoading && <LoadingState rows={10} />}
+        {isLoading && <LoadingState variant="overlay" />}
         {isError && <ErrorState onRetry={refetch} />}
         {data && (
           <>

@@ -14,28 +14,21 @@ const columns: Column<Technician>[] = [
     key: 'firstName',
     header: 'Nombre',
     render: (row) => (
-      <span className="font-medium text-[#151B30]">{`${row.firstName} ${row.lastName}`}</span>
+      <span className="technician-name">{`${row.firstName} ${row.lastName}`}</span>
     ),
   },
   {
     key: 'email',
     header: 'Email',
-    render: (row) => <span className="text-sm text-[#72727A]">{row.email}</span>,
+    render: (row) => <span className="technician-email">{row.email}</span>,
   },
   {
     key: '_count',
     header: 'Órdenes activas',
     render: (row) => (
-      <span
-        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-          (row._count?.assignedOrders ?? 0) > 3
-            ? 'bg-red-100 text-red-700'
-            : (row._count?.assignedOrders ?? 0) > 0
-            ? 'bg-blue-100 text-blue-700'
-            : 'bg-gray-100 text-gray-600'
-        }`}
-      >
-        {row._count?.assignedOrders ?? 0}
+      <span className={`technician-badge ${getAssignedOrdersModifier(row._count?.assignedOrders ?? 0)}`}>
+        <span className="technician-badge__dot" aria-hidden="true" />
+        {row._count?.assignedOrders ?? 0} activas
       </span>
     ),
   },
@@ -43,40 +36,41 @@ const columns: Column<Technician>[] = [
     key: 'isActive',
     header: 'Estado',
     render: (row) => (
-      <span
-        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-          row.isActive
-            ? 'bg-green-100 text-green-700'
-            : 'bg-gray-100 text-gray-500'
-        }`}
-      >
+      <span className={`technician-badge ${row.isActive ? 'technician-badge--active' : 'technician-badge--inactive'}`}>
+        <span className="technician-badge__dot" aria-hidden="true" />
         {row.isActive ? 'Activo' : 'Inactivo'}
       </span>
     ),
   },
 ]
 
+function getAssignedOrdersModifier(assignedOrders: number) {
+  if (assignedOrders > 3) return 'technician-badge--busy'
+  if (assignedOrders > 0) return 'technician-badge--assigned'
+  return 'technician-badge--available'
+}
+
 export function TechniciansPage() {
   const [search, setSearch] = useState('')
   const { data, isLoading, isError, refetch } = useTechnicians({ search, limit: 20 })
 
   return (
-    <div className="p-6">
+    <div className="page">
       <PageHeader
         description="Personal técnico registrado en el sistema"
       />
 
-      <div className="mb-4">
+      <div className="work-orders-filters">
         <SearchInput
           value={search}
           onChange={setSearch}
           placeholder="Buscar técnico por nombre o email..."
-          className="max-w-sm"
+          className="search-input--sm"
         />
       </div>
 
-      <div className="rounded-xl border border-[#C4D0D8] bg-white shadow-sm">
-        {isLoading && <LoadingState rows={8} />}
+      <div className="card">
+        {isLoading && <LoadingState variant="overlay" />}
         {isError && <ErrorState onRetry={refetch} />}
         {data && data.data.length === 0 && (
           <EmptyState
