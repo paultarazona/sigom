@@ -30,7 +30,7 @@ export function DataTable<T>({
             {columns.map((col) => (
               <th
                 key={col.key}
-                className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-[#72727A] ${col.className ?? ''}`}
+                className={`px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-widest text-[#72727A] ${col.className ?? ''}`}
               >
                 {col.header}
               </th>
@@ -53,7 +53,7 @@ export function DataTable<T>({
                 key={keyExtractor(row)}
                 onClick={() => onRowClick?.(row)}
                 className={`border-b border-[#C4D0D8] transition-colors last:border-0 ${
-                  onRowClick ? 'cursor-pointer hover:bg-[#F7F9FB]' : ''
+                  onRowClick ? 'cursor-pointer hover:bg-[#F7F9FB]/80' : 'hover:bg-[#F7F9FB]/80'
                 }`}
               >
                 {columns.map((col) => (

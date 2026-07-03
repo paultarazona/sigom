@@ -29,15 +29,15 @@ const navItems: NavItem[] = [
 
 export function AppSidebar() {
   return (
-    <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-[#C4D0D8] bg-white">
+    <aside className="flex h-screen w-64 shrink-0 flex-col bg-[#00236F]">
       {/* Logo */}
-      <div className="flex h-16 items-center gap-2.5 border-b border-[#C4D0D8] px-5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#00236F]">
+      <div className="flex h-16 items-center gap-2.5 border-b border-white/10 bg-[#001A52] px-5">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/15">
           <span className="text-xs font-bold text-white">SG</span>
         </div>
         <div className="leading-tight">
-          <p className="text-sm font-bold text-[#00236F]">SIGOM</p>
-          <p className="text-[10px] text-[#72727A]">ENOSA</p>
+          <p className="text-sm font-bold text-white">SIGOM</p>
+          <p className="text-[10px] text-[#57DFFE]/70">ENOSA</p>
         </div>
       </div>
 
@@ -50,11 +50,9 @@ export function AppSidebar() {
                 to={to}
                 end={to === '/'}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-[#57DFFE]/15 text-[#00236F]'
-                      : 'text-[#72727A] hover:bg-[#F7F9FB] hover:text-[#151B30]'
-                  }`
+                  isActive
+                    ? 'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors bg-white/[0.12] text-white'
+                    : 'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors text-white/60 hover:bg-white/[0.07] hover:text-white'
                 }
               >
                 {({ isActive }) => (
@@ -62,12 +60,9 @@ export function AppSidebar() {
                     <Icon
                       size={18}
                       strokeWidth={isActive ? 2 : 1.75}
-                      className={isActive ? 'text-[#00236F]' : 'text-[#72727A]'}
+                      className={isActive ? 'text-[#57DFFE]' : 'text-white/50'}
                     />
                     <span>{label}</span>
-                    {isActive && (
-                      <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#57DFFE]" />
-                    )}
                   </>
                 )}
               </NavLink>
@@ -77,8 +72,8 @@ export function AppSidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-[#C4D0D8] px-4 py-3">
-        <p className="text-[10px] text-[#72727A]">v1.0.0 — SIGOM Web</p>
+      <div className="border-t border-white/10 px-4 py-3">
+        <p className="text-[10px] text-white/30">v1.0.0 — SIGOM Web</p>
       </div>
     </aside>
   )

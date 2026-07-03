@@ -8,7 +8,7 @@
 }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: #F7F9FB;
   color: #151B30;
   -webkit-font-smoothing: antialiased;
