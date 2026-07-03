@@ -26,10 +26,10 @@ const recentOrdersColumns: Column<WorkOrder>[] = [
     ),
   },
   {
-    key: 'title',
+    key: 'type',
     header: 'Título',
     render: (row) => (
-      <span className="max-w-xs truncate block text-textPrimary">{row.title}</span>
+      <span className="max-w-xs truncate block text-textPrimary">{row.type}</span>
     ),
   },
   {

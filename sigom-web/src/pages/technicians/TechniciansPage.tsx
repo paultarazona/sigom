@@ -11,9 +11,11 @@ import type { Technician } from '../../types'
 
 const columns: Column<Technician>[] = [
   {
-    key: 'name',
+    key: 'firstName',
     header: 'Nombre',
-    render: (row) => <span className="font-medium text-[#151B30]">{row.name}</span>,
+    render: (row) => (
+      <span className="font-medium text-[#151B30]">{`${row.firstName} ${row.lastName}`}</span>
+    ),
   },
   {
     key: 'email',
@@ -21,19 +23,19 @@ const columns: Column<Technician>[] = [
     render: (row) => <span className="text-sm text-[#72727A]">{row.email}</span>,
   },
   {
-    key: 'activeOrdersCount',
+    key: '_count',
     header: 'Órdenes activas',
     render: (row) => (
       <span
         className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-          row.activeOrdersCount > 3
+          (row._count?.assignedOrders ?? 0) > 3
             ? 'bg-red-100 text-red-700'
-            : row.activeOrdersCount > 0
+            : (row._count?.assignedOrders ?? 0) > 0
             ? 'bg-blue-100 text-blue-700'
             : 'bg-gray-100 text-gray-600'
         }`}
       >
-        {row.activeOrdersCount}
+        {row._count?.assignedOrders ?? 0}
       </span>
     ),
   },

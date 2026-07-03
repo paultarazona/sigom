@@ -17,7 +17,11 @@ const columns: Column<Crew>[] = [
   {
     key: 'leaderId',
     header: 'Líder',
-    render: (row) => <span className="text-sm text-[#72727A]">{row.leaderId}</span>,
+    render: (row) => (
+      <span className="text-sm text-[#72727A]">
+        {`${row.leader?.firstName ?? ''} ${row.leader?.lastName ?? ''}`.trim()}
+      </span>
+    ),
   },
   {
     key: 'members',
@@ -25,7 +29,7 @@ const columns: Column<Crew>[] = [
     render: (row) => (
       <span className="inline-flex items-center gap-1 text-sm text-[#151B30]">
         <Users size={14} className="text-[#72727A]" />
-        {row.members?.length ?? 0}
+        {row._count?.members ?? 0}
       </span>
     ),
   },

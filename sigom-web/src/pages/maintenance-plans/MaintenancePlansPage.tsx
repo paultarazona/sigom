@@ -10,30 +10,32 @@ import type { MaintenancePlan } from '../../types'
 
 const columns: Column<MaintenancePlan>[] = [
   {
-    key: 'title',
+    key: 'name',
     header: 'Plan',
-    render: (row) => <span className="font-medium text-[#151B30]">{row.title}</span>,
+    render: (row) => <span className="font-medium text-[#151B30]">{row.name}</span>,
   },
   {
-    key: 'zoneId',
+    key: 'frequencyDays',
     header: 'Zona',
-    render: (row) => <span className="text-sm text-[#72727A]">{row.zoneId}</span>,
+    render: (row) => (
+      <span className="text-sm text-[#72727A]">{`Cada ${row.frequencyDays} días`}</span>
+    ),
   },
   {
-    key: 'status',
+    key: 'isActive',
     header: 'Estado',
     render: (row) => (
       <span className="inline-flex items-center rounded-full bg-[#F7F9FB] px-2.5 py-0.5 text-xs font-medium text-[#72727A]">
-        {row.status}
+        {row.isActive ? 'Activo' : 'Inactivo'}
       </span>
     ),
   },
   {
-    key: 'scheduledDate',
+    key: 'startDate',
     header: 'Fecha programada',
     render: (row) => (
       <span className="text-sm text-[#72727A]">
-        {new Date(row.scheduledDate).toLocaleDateString('es-PE')}
+        {new Date(row.startDate).toLocaleDateString('es-PE')}
       </span>
     ),
   },

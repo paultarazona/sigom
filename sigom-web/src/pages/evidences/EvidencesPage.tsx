@@ -13,14 +13,14 @@ const columns: Column<Evidence>[] = [
     key: 'id',
     header: 'ID',
     render: (row) => (
-      <span className="font-mono text-xs text-[#72727A]">{row.id.slice(0, 8)}…</span>
+      <span className="font-mono text-xs text-[#72727A]">{row.code}</span>
     ),
   },
   {
     key: 'workOrderId',
     header: 'Orden',
     render: (row) => (
-      <span className="font-mono text-xs text-[#00236F]">{row.workOrderId.slice(0, 8)}…</span>
+      <span className="font-mono text-xs text-[#00236F]">{row.workOrder?.code ?? row.workOrderId}</span>
     ),
   },
   {
@@ -33,11 +33,11 @@ const columns: Column<Evidence>[] = [
     ),
   },
   {
-    key: 'fileUrl',
+    key: 'filePath',
     header: 'Archivo',
     render: (row) => (
       <a
-        href={row.fileUrl}
+        href={`http://localhost:3000/${row.filePath?.replace(/^\//, '')}`}
         target="_blank"
         rel="noopener noreferrer"
         className="text-sm text-[#00236F] hover:underline"
@@ -48,11 +48,11 @@ const columns: Column<Evidence>[] = [
     ),
   },
   {
-    key: 'uploadedAt',
+    key: 'registeredAt',
     header: 'Subida',
     render: (row) => (
       <span className="text-sm text-[#72727A]">
-        {new Date(row.uploadedAt).toLocaleDateString('es-PE')}
+        {new Date(row.registeredAt).toLocaleDateString('es-PE')}
       </span>
     ),
   },
