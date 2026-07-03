@@ -26,14 +26,14 @@ export function StatCard({
 
   return (
     <div
-      className="rounded-xl bg-white p-5 shadow-sm border border-[#E8EEF2] transition-shadow hover:shadow-md"
+      className="rounded-xl bg-surface p-5 border border-border transition-shadow hover:shadow-md"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-wide text-[#72727A] truncate">{title}</p>
-          <p className="mt-1 text-2xl font-bold text-[#151B30]">{value}</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-textSecondary truncate">{title}</p>
+          <p className="mt-1 text-2xl font-bold text-textPrimary">{value}</p>
           {description && (
-            <p className="mt-1 text-xs text-[#72727A]">{description}</p>
+            <p className="mt-1 text-xs text-textSecondary">{description}</p>
           )}
         </div>
         <div className={`rounded-lg p-2.5 ${styles.icon} shrink-0`}>

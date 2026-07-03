@@ -51,8 +51,8 @@ export function AppSidebar() {
                 end={to === '/'}
                 className={({ isActive }) =>
                   isActive
-                    ? 'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors bg-white/[0.12] text-white'
-                    : 'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors text-white/60 hover:bg-white/[0.07] hover:text-white'
+                    ? 'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-all duration-150 bg-white/[0.12] text-white'
+                    : 'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150 text-white/60 hover:bg-white/[0.07] hover:text-white'
                 }
               >
                 {({ isActive }) => (

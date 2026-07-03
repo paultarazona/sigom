@@ -82,6 +82,7 @@ export function TechniciansPage() {
             icon={HardHat}
             title="Sin técnicos"
             description="No hay técnicos registrados en el sistema."
+            hint="Contactá al administrador para registrar el personal técnico."
           />
         )}
         {data && data.data.length > 0 && (

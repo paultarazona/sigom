@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
+import { Button } from '../../components/ui/Button'
 import { PageHeader } from '../../components/ui/PageHeader'
 import { StatusBadge } from '../../components/ui/StatusBadge'
 import { PriorityBadge } from '../../components/ui/PriorityBadge'
@@ -33,67 +34,6 @@ type ActivePanel =
   | null
 
 // ---------------------------------------------------------------------------
-// Shared button primitives
-// ---------------------------------------------------------------------------
-
-function PrimaryBtn({
-  children,
-  onClick,
-  disabled,
-}: {
-  children: React.ReactNode
-  onClick: () => void
-  disabled?: boolean
-}) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className="rounded-lg bg-[#00236F] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#001A52] focus:outline-none focus:ring-2 focus:ring-[#00236F]/40 disabled:opacity-50"
-    >
-      {children}
-    </button>
-  )
-}
-
-function DangerBtn({
-  children,
-  onClick,
-  disabled,
-}: {
-  children: React.ReactNode
-  onClick: () => void
-  disabled?: boolean
-}) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className="rounded-lg bg-[#B91C1C] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500/40 disabled:opacity-50"
-    >
-      {children}
-    </button>
-  )
-}
-
-function SecondaryBtn({
-  children,
-  onClick,
-}: {
-  children: React.ReactNode
-  onClick: () => void
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="rounded-lg border border-[#C4D0D8] bg-white px-4 py-2 text-sm font-semibold text-[#151B30] transition-colors hover:bg-[#F7F9FB] focus:outline-none focus:ring-2 focus:ring-[#00236F]/30"
-    >
-      {children}
-    </button>
-  )
-}
-
-// ---------------------------------------------------------------------------
 // Inline form panel
 // ---------------------------------------------------------------------------
 
@@ -105,10 +45,10 @@ function FormPanel({
   onClose: () => void
 }) {
   return (
-    <div className="rounded-xl border border-[#C4D0D8] bg-[#F7F9FB] p-4">
+    <div className="rounded-xl border border-border bg-background p-4">
       {children}
       <div className="mt-3">
-        <SecondaryBtn onClick={onClose}>Cancelar</SecondaryBtn>
+        <Button variant="secondary" onClick={onClose}>Cancelar</Button>
       </div>
     </div>
   )
@@ -203,54 +143,54 @@ function ActionsPanel({ id, status }: ActionsPanelProps) {
   }
 
   return (
-    <div className="rounded-xl border border-[#C4D0D8] bg-white p-5 shadow-sm">
-      <h3 className="mb-4 text-sm font-semibold text-[#151B30]">Acciones</h3>
+    <div className="rounded-xl border border-border bg-surface p-5 shadow-sm">
+      <h3 className="mb-4 text-sm font-semibold text-textPrimary">Acciones</h3>
 
       {/* Button row */}
       <div className="flex flex-wrap gap-2">
         {status === 'PENDING' && (
           <>
-            <PrimaryBtn onClick={() => setActivePanel('assign')} disabled={isWorking}>
+            <Button onClick={() => setActivePanel('assign')} disabled={isWorking}>
               Asignar técnico
-            </PrimaryBtn>
-            <DangerBtn onClick={() => setActivePanel('cancel')} disabled={isWorking}>
+            </Button>
+            <Button variant="danger" onClick={() => setActivePanel('cancel')} disabled={isWorking}>
               Cancelar orden
-            </DangerBtn>
+            </Button>
           </>
         )}
 
         {status === 'ASSIGNED' && (
           <>
-            <PrimaryBtn onClick={() => setActivePanel('start')} disabled={isWorking}>
+            <Button onClick={() => setActivePanel('start')} disabled={isWorking}>
               Iniciar en campo
-            </PrimaryBtn>
-            <DangerBtn onClick={() => setActivePanel('cancel')} disabled={isWorking}>
+            </Button>
+            <Button variant="danger" onClick={() => setActivePanel('cancel')} disabled={isWorking}>
               Cancelar orden
-            </DangerBtn>
+            </Button>
           </>
         )}
 
         {status === 'IN_FIELD' && (
           <>
-            <DangerBtn onClick={() => setActivePanel('suspend')} disabled={isWorking}>
+            <Button variant="danger" onClick={() => setActivePanel('suspend')} disabled={isWorking}>
               Suspender
-            </DangerBtn>
-            <PrimaryBtn onClick={() => setActivePanel('resolve')} disabled={isWorking}>
+            </Button>
+            <Button onClick={() => setActivePanel('resolve')} disabled={isWorking}>
               Resolver
-            </PrimaryBtn>
+            </Button>
           </>
         )}
 
         {status === 'SUSPENDED' && (
-          <PrimaryBtn onClick={() => setActivePanel('reassign')} disabled={isWorking}>
+          <Button onClick={() => setActivePanel('reassign')} disabled={isWorking}>
             Reasignar técnico
-          </PrimaryBtn>
+          </Button>
         )}
 
         {status === 'RESOLVED' && (
-          <PrimaryBtn onClick={() => setActivePanel('close')} disabled={isWorking}>
+          <Button onClick={() => setActivePanel('close')} disabled={isWorking}>
             Cerrar orden
-          </PrimaryBtn>
+          </Button>
         )}
       </div>
 
@@ -259,7 +199,7 @@ function ActionsPanel({ id, status }: ActionsPanelProps) {
       {(activePanel === 'assign' || activePanel === 'reassign') && (
         <div className="mt-4">
           <FormPanel onClose={resetPanels}>
-            <label className="mb-1 block text-xs font-semibold text-[#151B30]">
+            <label className="mb-1 block text-xs font-semibold text-textPrimary">
               ID del técnico
             </label>
             <input
@@ -267,11 +207,11 @@ function ActionsPanel({ id, status }: ActionsPanelProps) {
               value={technicianId}
               onChange={(e) => setTechnicianId(e.target.value)}
               placeholder="ej. tech-001"
-              className="mb-3 w-full rounded-lg border border-[#C4D0D8] px-3 py-2 text-sm text-[#151B30] focus:outline-none focus:ring-2 focus:ring-[#00236F]/40"
+              className="mb-3 w-full rounded-lg border border-border px-3 py-2 text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-primary/40"
             />
-            <PrimaryBtn onClick={handleAssign} disabled={isWorking || !technicianId.trim()}>
+            <Button onClick={handleAssign} disabled={isWorking || !technicianId.trim()}>
               {assign.isPending ? 'Guardando…' : activePanel === 'reassign' ? 'Reasignar' : 'Asignar'}
-            </PrimaryBtn>
+            </Button>
           </FormPanel>
         </div>
       )}
@@ -279,12 +219,12 @@ function ActionsPanel({ id, status }: ActionsPanelProps) {
       {activePanel === 'start' && (
         <div className="mt-4">
           <FormPanel onClose={resetPanels}>
-            <p className="mb-3 text-sm text-[#72727A]">
+            <p className="mb-3 text-sm text-textSecondary">
               ¿Confirmás que el técnico inicia el trabajo en campo?
             </p>
-            <PrimaryBtn onClick={handleStart} disabled={isWorking}>
+            <Button onClick={handleStart} disabled={isWorking}>
               {start.isPending ? 'Iniciando…' : 'Confirmar inicio'}
-            </PrimaryBtn>
+            </Button>
           </FormPanel>
         </div>
       )}
@@ -292,7 +232,7 @@ function ActionsPanel({ id, status }: ActionsPanelProps) {
       {activePanel === 'suspend' && (
         <div className="mt-4">
           <FormPanel onClose={resetPanels}>
-            <label className="mb-1 block text-xs font-semibold text-[#151B30]">
+            <label className="mb-1 block text-xs font-semibold text-textPrimary">
               Motivo de suspensión
             </label>
             <textarea
@@ -300,11 +240,11 @@ function ActionsPanel({ id, status }: ActionsPanelProps) {
               value={suspendReason}
               onChange={(e) => setSuspendReason(e.target.value)}
               placeholder="Describí el motivo de la suspensión…"
-              className="mb-3 w-full rounded-lg border border-[#C4D0D8] px-3 py-2 text-sm text-[#151B30] focus:outline-none focus:ring-2 focus:ring-[#00236F]/40 resize-none"
+              className="mb-3 w-full rounded-lg border border-border px-3 py-2 text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-primary/40 resize-none"
             />
-            <DangerBtn onClick={handleSuspend} disabled={isWorking || !suspendReason.trim()}>
+            <Button variant="danger" onClick={handleSuspend} disabled={isWorking || !suspendReason.trim()}>
               {suspend.isPending ? 'Suspendiendo…' : 'Suspender orden'}
-            </DangerBtn>
+            </Button>
           </FormPanel>
         </div>
       )}
@@ -312,7 +252,7 @@ function ActionsPanel({ id, status }: ActionsPanelProps) {
       {activePanel === 'resolve' && (
         <div className="mt-4">
           <FormPanel onClose={resetPanels}>
-            <label className="mb-1 block text-xs font-semibold text-[#151B30]">
+            <label className="mb-1 block text-xs font-semibold text-textPrimary">
               Diagnóstico final
             </label>
             <textarea
@@ -320,22 +260,22 @@ function ActionsPanel({ id, status }: ActionsPanelProps) {
               value={finalDiagnosis}
               onChange={(e) => setFinalDiagnosis(e.target.value)}
               placeholder="Describí el diagnóstico final…"
-              className="mb-3 w-full rounded-lg border border-[#C4D0D8] px-3 py-2 text-sm text-[#151B30] focus:outline-none focus:ring-2 focus:ring-[#00236F]/40 resize-none"
+              className="mb-3 w-full rounded-lg border border-border px-3 py-2 text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-primary/40 resize-none"
             />
-            <label className="mb-1 block text-xs font-semibold text-[#151B30]">Solución</label>
+            <label className="mb-1 block text-xs font-semibold text-textPrimary">Solución</label>
             <textarea
               rows={2}
               value={solution}
               onChange={(e) => setSolution(e.target.value)}
               placeholder="Describí la solución aplicada…"
-              className="mb-3 w-full rounded-lg border border-[#C4D0D8] px-3 py-2 text-sm text-[#151B30] focus:outline-none focus:ring-2 focus:ring-[#00236F]/40 resize-none"
+              className="mb-3 w-full rounded-lg border border-border px-3 py-2 text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-primary/40 resize-none"
             />
-            <PrimaryBtn
+            <Button
               onClick={handleResolve}
               disabled={isWorking || !finalDiagnosis.trim() || !solution.trim()}
             >
               {resolve.isPending ? 'Guardando…' : 'Marcar como resuelta'}
-            </PrimaryBtn>
+            </Button>
           </FormPanel>
         </div>
       )}
@@ -343,12 +283,12 @@ function ActionsPanel({ id, status }: ActionsPanelProps) {
       {activePanel === 'close' && (
         <div className="mt-4">
           <FormPanel onClose={resetPanels}>
-            <p className="mb-3 text-sm text-[#72727A]">
+            <p className="mb-3 text-sm text-textSecondary">
               ¿Confirmás el cierre definitivo de esta orden?
             </p>
-            <PrimaryBtn onClick={handleClose} disabled={isWorking}>
+            <Button onClick={handleClose} disabled={isWorking}>
               {close.isPending ? 'Cerrando…' : 'Confirmar cierre'}
-            </PrimaryBtn>
+            </Button>
           </FormPanel>
         </div>
       )}
@@ -357,7 +297,7 @@ function ActionsPanel({ id, status }: ActionsPanelProps) {
         <>
           <div className="mt-4">
             <FormPanel onClose={resetPanels}>
-              <label className="mb-1 block text-xs font-semibold text-[#151B30]">
+              <label className="mb-1 block text-xs font-semibold text-textPrimary">
                 Motivo (opcional)
               </label>
               <input
@@ -365,11 +305,11 @@ function ActionsPanel({ id, status }: ActionsPanelProps) {
                 value={cancelReason}
                 onChange={(e) => setCancelReason(e.target.value)}
                 placeholder="Motivo de cancelación…"
-                className="mb-3 w-full rounded-lg border border-[#C4D0D8] px-3 py-2 text-sm text-[#151B30] focus:outline-none focus:ring-2 focus:ring-[#00236F]/40"
+                className="mb-3 w-full rounded-lg border border-border px-3 py-2 text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-primary/40"
               />
-              <DangerBtn onClick={() => setConfirmOpen(true)} disabled={isWorking}>
+              <Button variant="danger" onClick={() => setConfirmOpen(true)} disabled={isWorking}>
                 Cancelar orden
-              </DangerBtn>
+              </Button>
             </FormPanel>
           </div>
 
@@ -402,7 +342,7 @@ export function WorkOrderDetailPage() {
     <div className="p-6">
       <button
         onClick={() => navigate(-1)}
-        className="mb-4 flex items-center gap-1.5 text-sm text-[#72727A] hover:text-[#151B30] transition-colors"
+        className="mb-4 flex items-center gap-1.5 text-sm text-textSecondary hover:text-textPrimary transition-colors"
       >
         <ArrowLeft size={16} />
         Volver
@@ -426,28 +366,28 @@ export function WorkOrderDetailPage() {
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             <div className="lg:col-span-2 space-y-4">
-              <div className="rounded-xl border border-[#C4D0D8] bg-white p-5 shadow-sm">
-                <h3 className="mb-3 text-sm font-semibold text-[#151B30]">Descripción</h3>
-                <p className="text-sm text-[#72727A] leading-relaxed">{data.description}</p>
+              <div className="rounded-xl border border-border bg-surface p-5 shadow-sm">
+                <h3 className="mb-3 text-sm font-semibold text-textPrimary">Descripción</h3>
+                <p className="text-sm text-textSecondary leading-relaxed">{data.description}</p>
               </div>
 
               {(data.finalDiagnosis || data.solution) && (
-                <div className="rounded-xl border border-[#C4D0D8] bg-white p-5 shadow-sm">
-                  <h3 className="mb-3 text-sm font-semibold text-[#151B30]">Resolución</h3>
+                <div className="rounded-xl border border-border bg-surface p-5 shadow-sm">
+                  <h3 className="mb-3 text-sm font-semibold text-textPrimary">Resolución</h3>
                   {data.finalDiagnosis && (
                     <div className="mb-3">
-                      <p className="text-xs font-semibold text-[#72727A] uppercase tracking-wide mb-1">
+                      <p className="text-xs font-semibold text-textSecondary uppercase tracking-wide mb-1">
                         Diagnóstico final
                       </p>
-                      <p className="text-sm text-[#151B30] leading-relaxed">{data.finalDiagnosis}</p>
+                      <p className="text-sm text-textPrimary leading-relaxed">{data.finalDiagnosis}</p>
                     </div>
                   )}
                   {data.solution && (
                     <div>
-                      <p className="text-xs font-semibold text-[#72727A] uppercase tracking-wide mb-1">
+                      <p className="text-xs font-semibold text-textSecondary uppercase tracking-wide mb-1">
                         Solución
                       </p>
-                      <p className="text-sm text-[#151B30] leading-relaxed">{data.solution}</p>
+                      <p className="text-sm text-textPrimary leading-relaxed">{data.solution}</p>
                     </div>
                   )}
                 </div>
@@ -457,26 +397,26 @@ export function WorkOrderDetailPage() {
             </div>
 
             <div className="space-y-4">
-              <div className="rounded-xl border border-[#C4D0D8] bg-white p-5 shadow-sm">
-                <h3 className="mb-3 text-sm font-semibold text-[#151B30]">Detalles</h3>
+              <div className="rounded-xl border border-border bg-surface p-5 shadow-sm">
+                <h3 className="mb-3 text-sm font-semibold text-textPrimary">Detalles</h3>
                 <dl className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <dt className="text-[#72727A]">Zona</dt>
-                    <dd className="font-medium text-[#151B30]">{data.zoneId}</dd>
+                    <dt className="text-textSecondary">Zona</dt>
+                    <dd className="font-medium text-textPrimary">{data.zoneId}</dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-[#72727A]">Asignado a</dt>
-                    <dd className="font-medium text-[#151B30]">{data.assignedTo ?? '—'}</dd>
+                    <dt className="text-textSecondary">Asignado a</dt>
+                    <dd className="font-medium text-textPrimary">{data.assignedTo ?? '—'}</dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-[#72727A]">Creada</dt>
-                    <dd className="font-medium text-[#151B30]">
+                    <dt className="text-textSecondary">Creada</dt>
+                    <dd className="font-medium text-textPrimary">
                       {new Date(data.createdAt).toLocaleDateString('es-PE')}
                     </dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-[#72727A]">Actualizada</dt>
-                    <dd className="font-medium text-[#151B30]">
+                    <dt className="text-textSecondary">Actualizada</dt>
+                    <dd className="font-medium text-textPrimary">
                       {new Date(data.updatedAt).toLocaleDateString('es-PE')}
                     </dd>
                   </div>
@@ -484,7 +424,7 @@ export function WorkOrderDetailPage() {
               </div>
 
               {(data.status === 'CLOSED' || data.status === 'CANCELLED') && (
-                <div className="rounded-xl border border-[#C4D0D8] bg-white p-5 shadow-sm">
+                <div className="rounded-xl border border-border bg-surface p-5 shadow-sm">
                   <span
                     className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
                       data.status === 'CLOSED'

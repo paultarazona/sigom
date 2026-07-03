@@ -19,16 +19,16 @@ export function Pagination({
   const to = Math.min(page * limit, total)
 
   return (
-    <div className="flex items-center justify-between border-t border-[#C4D0D8] bg-white px-4 py-3">
-      <p className="text-sm text-[#72727A]">
-        Mostrando <span className="font-medium text-[#151B30]">{from}–{to}</span> de{' '}
-        <span className="font-medium text-[#151B30]">{total}</span> resultados
+    <div className="flex items-center justify-between border-t border-border bg-surface px-4 py-3">
+      <p className="text-sm text-textSecondary">
+        Mostrando <span className="font-medium text-textPrimary">{from}–{to}</span> de{' '}
+        <span className="font-medium text-textPrimary">{total}</span> resultados
       </p>
       <div className="flex items-center gap-1">
         <button
           onClick={() => onPageChange(page - 1)}
           disabled={page <= 1}
-          className="rounded-md p-1.5 text-[#72727A] hover:bg-[#F7F9FB] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="rounded-md p-1.5 text-textSecondary hover:bg-background disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           aria-label="Página anterior"
         >
           <ChevronLeft size={16} />
@@ -42,7 +42,7 @@ export function Pagination({
           }, [])
           .map((p, idx) =>
             p === '...' ? (
-              <span key={`ellipsis-${idx}`} className="px-2 text-sm text-[#72727A]">
+              <span key={`ellipsis-${idx}`} className="px-2 text-sm text-textSecondary">
                 …
               </span>
             ) : (
@@ -51,8 +51,8 @@ export function Pagination({
                 onClick={() => onPageChange(p as number)}
                 className={`min-w-[32px] rounded-md px-2 py-1 text-sm font-medium transition-colors ${
                   p === page
-                    ? 'bg-[#00236F] text-white'
-                    : 'text-[#151B30] hover:bg-[#F7F9FB]'
+                    ? 'bg-primary text-white'
+                    : 'text-textPrimary hover:bg-background'
                 }`}
               >
                 {p}
@@ -62,7 +62,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(page + 1)}
           disabled={page >= totalPages}
-          className="rounded-md p-1.5 text-[#72727A] hover:bg-[#F7F9FB] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="rounded-md p-1.5 text-textSecondary hover:bg-background disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           aria-label="Página siguiente"
         >
           <ChevronRight size={16} />

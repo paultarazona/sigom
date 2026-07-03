@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Plus } from 'lucide-react'
 import { PageHeader } from '../../components/ui/PageHeader'
+import { Button } from '../../components/ui/Button'
 import { SearchInput } from '../../components/ui/SearchInput'
 import { FilterBar, FilterSelect } from '../../components/ui/FilterBar'
 import { DataTable, type Column } from '../../components/ui/DataTable'
@@ -37,13 +38,13 @@ const columns: Column<WorkOrder>[] = [
     key: 'code',
     header: 'Código',
     render: (row) => (
-      <span className="font-mono text-xs font-medium text-[#00236F]">{row.code}</span>
+      <span className="font-mono text-xs font-medium text-primary">{row.code}</span>
     ),
   },
   {
     key: 'title',
     header: 'Título',
-    render: (row) => <span className="text-[#151B30]">{row.title}</span>,
+    render: (row) => <span className="text-textPrimary">{row.title}</span>,
   },
   {
     key: 'status',
@@ -59,7 +60,7 @@ const columns: Column<WorkOrder>[] = [
     key: 'createdAt',
     header: 'Creada',
     render: (row) => (
-      <span className="text-sm text-[#72727A]">
+      <span className="text-sm text-textSecondary">
         {new Date(row.createdAt).toLocaleDateString('es-PE')}
       </span>
     ),
@@ -87,13 +88,10 @@ export function WorkOrdersPage() {
         title="Órdenes de Trabajo"
         description="Gestión y seguimiento de órdenes operativas"
         actions={
-          <button
-            onClick={() => navigate('/work-orders/new')}
-            className="flex items-center gap-2 rounded-lg bg-[#00236F] px-4 py-2 text-sm font-semibold text-white hover:bg-[#001A52] transition-colors focus:outline-none focus:ring-2 focus:ring-[#00236F]/40"
-          >
-            <Plus size={16} />
+          <Button onClick={() => navigate('/work-orders/new')}>
+            <Plus size={16} aria-hidden="true" />
             Nueva orden
-          </button>
+          </Button>
         }
       />
 
@@ -120,7 +118,7 @@ export function WorkOrdersPage() {
         </FilterBar>
       </div>
 
-      <div className="rounded-xl border border-[#C4D0D8] bg-white shadow-sm">
+      <div className="rounded-xl border border-border bg-surface shadow-sm">
         {isLoading && <LoadingState rows={10} />}
         {isError && <ErrorState onRetry={refetch} />}
         {data && (

@@ -62,22 +62,22 @@ export function ConfirmDialog({
             <AlertTriangle size={20} strokeWidth={1.75} />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-base font-semibold text-[#151B30]">{title}</h3>
-            <p className="mt-1 text-sm text-[#72727A]">{message}</p>
+            <h3 className="text-base font-semibold text-textPrimary">{title}</h3>
+            <p className="mt-1 text-sm text-textSecondary">{message}</p>
           </div>
           <button
             onClick={onCancel}
-            className="shrink-0 rounded-md p-1 text-[#72727A] hover:bg-[#F7F9FB] transition-colors"
+            className="shrink-0 rounded-md p-1 text-textSecondary hover:bg-background transition-colors"
             aria-label="Cerrar"
           >
             <X size={16} />
           </button>
         </div>
       </div>
-      <div className="flex justify-end gap-2 border-t border-[#C4D0D8] px-6 py-4">
+      <div className="flex justify-end gap-2 border-t border-border px-6 py-4">
         <button
           onClick={onCancel}
-          className="rounded-lg border border-[#C4D0D8] bg-white px-4 py-2 text-sm font-semibold text-[#151B30] hover:bg-[#F7F9FB] transition-colors focus:outline-none focus:ring-2 focus:ring-[#00236F]/30"
+          className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-semibold text-textPrimary hover:bg-background transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30"
         >
           {cancelLabel}
         </button>

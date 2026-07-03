@@ -14,7 +14,7 @@ export default {
         surface: '#FFFFFF',
         border: '#C4D0D8',
         textPrimary: '#151B30',
-        textSecondary: '#72727A',
+        textSecondary: '#6B6B73',
         success: {
           DEFAULT: '#166534',
           background: '#DBFCE6',

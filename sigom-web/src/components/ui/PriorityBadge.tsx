@@ -31,7 +31,7 @@ export function PriorityBadge({ priority }: PriorityBadgeProps) {
   const config = priorityConfig[priority]
   return (
     <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${config.className}`}>
-      <span className={`h-1.5 w-1.5 rounded-full ${config.dot} shrink-0`} />
+      <span className={`h-1.5 w-1.5 rounded-full ${config.dot} shrink-0`} aria-hidden="true" />
       {config.label}
     </span>
   )

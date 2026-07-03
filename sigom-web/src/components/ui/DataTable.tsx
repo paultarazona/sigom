@@ -26,11 +26,11 @@ export function DataTable<T>({
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-[#C4D0D8] bg-[#F7F9FB]">
+          <tr className="border-b border-border bg-background">
             {columns.map((col) => (
               <th
                 key={col.key}
-                className={`px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-widest text-[#72727A] ${col.className ?? ''}`}
+                className={`px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-widest text-textSecondary ${col.className ?? ''}`}
               >
                 {col.header}
               </th>
@@ -42,7 +42,7 @@ export function DataTable<T>({
             <tr>
               <td
                 colSpan={columns.length}
-                className="px-4 py-10 text-center text-sm text-[#72727A]"
+                className="px-4 py-10 text-center text-sm text-textSecondary"
               >
                 {emptyMessage}
               </td>
@@ -52,14 +52,14 @@ export function DataTable<T>({
               <tr
                 key={keyExtractor(row)}
                 onClick={() => onRowClick?.(row)}
-                className={`border-b border-[#C4D0D8] transition-colors last:border-0 ${
-                  onRowClick ? 'cursor-pointer hover:bg-[#F7F9FB]/80' : 'hover:bg-[#F7F9FB]/80'
+                className={`border-b border-border transition-colors last:border-0 ${
+                  onRowClick ? 'cursor-pointer hover:bg-[#F0F4F8]' : 'hover:bg-[#F0F4F8]'
                 }`}
               >
                 {columns.map((col) => (
                   <td
                     key={col.key}
-                    className={`px-4 py-3 text-[#151B30] ${col.className ?? ''}`}
+                    className={`px-4 py-3 text-textPrimary ${col.className ?? ''}`}
                   >
                     {col.render(row)}
                   </td>

@@ -17,14 +17,14 @@ export function SearchInput({
     <div className={`relative ${className}`}>
       <Search
         size={16}
-        className="absolute left-3 top-1/2 -translate-y-1/2 text-[#72727A] pointer-events-none"
+        className="absolute left-3 top-1/2 -translate-y-1/2 text-textSecondary pointer-events-none"
       />
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-[#C4D0D8] bg-white py-2 pl-9 pr-4 text-sm text-[#151B30] placeholder:text-[#72727A] focus:border-[#00236F] focus:outline-none focus:ring-2 focus:ring-[#00236F]/20 transition-colors"
+        className="w-full rounded-lg border border-border bg-surface py-2 pl-9 pr-4 text-sm text-textPrimary placeholder:text-textSecondary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors"
       />
     </div>
   )

@@ -52,6 +52,7 @@ export function CrewsPage() {
             icon={Users}
             title="Sin cuadrillas"
             description="No hay cuadrillas registradas aún."
+            hint="Contactá al administrador para registrar las cuadrillas de trabajo."
           />
         )}
         {data && data.data.length > 0 && (
