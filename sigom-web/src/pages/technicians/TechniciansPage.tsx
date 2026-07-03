@@ -63,7 +63,6 @@ export function TechniciansPage() {
   return (
     <div className="p-6">
       <PageHeader
-        title="Técnicos"
         description="Personal técnico registrado en el sistema"
       />
 

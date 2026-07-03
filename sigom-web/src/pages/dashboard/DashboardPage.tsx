@@ -13,7 +13,7 @@ import { StatusBadge } from '../../components/ui/StatusBadge'
 import { PriorityBadge } from '../../components/ui/PriorityBadge'
 import { LoadingState } from '../../components/ui/LoadingState'
 import { ErrorState } from '../../components/ui/ErrorState'
-import { useDashboardSummary } from '../../hooks/useReports'
+import { useDashboardSummary, useAverageAttentionTime } from '../../hooks/useReports'
 import { useWorkOrders } from '../../hooks/useWorkOrders'
 import type { WorkOrder } from '../../types'
 
@@ -60,14 +60,14 @@ const recentOrdersColumns: Column<WorkOrder>[] = [
 export function DashboardPage() {
   const navigate = useNavigate()
   const summary = useDashboardSummary()
+  const avgTime = useAverageAttentionTime()
   const workOrders = useWorkOrders({ limit: 5, page: 1 })
 
   const stats = summary.data
 
   return (
-    <div className="p-6">
+    <div className="page">
       <PageHeader
-        title="Dashboard operativo"
         description="Resumen del estado actual de las órdenes de trabajo"
       />
 
@@ -75,7 +75,7 @@ export function DashboardPage() {
       {summary.isLoading && <LoadingState rows={1} />}
       {summary.isError && <ErrorState message="No se pudo cargar el resumen." onRetry={() => summary.refetch()} />}
       {stats && (
-        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="stat-grid">
           <StatCard
             title="Órdenes pendientes"
             value={stats.pending}
@@ -84,10 +84,10 @@ export function DashboardPage() {
             variant="default"
           />
           <StatCard
-            title="Órdenes críticas"
-            value={stats.critical}
+            title="Asignadas"
+            value={stats.assigned}
             icon={AlertCircle}
-            description="Requieren atención inmediata"
+            description="En proceso de atención"
             variant="danger"
           />
           <StatCard
@@ -99,7 +99,7 @@ export function DashboardPage() {
           />
           <StatCard
             title="Tiempo promedio"
-            value={`${stats.averageResolutionHours}h`}
+            value={avgTime.data ? `${avgTime.data.averageHours}h` : '—'}
             icon={Clock}
             description="De resolución por orden"
             variant="success"
@@ -108,14 +108,14 @@ export function DashboardPage() {
       )}
 
       {/* Recent work orders */}
-      <div className="rounded-xl border border-border bg-surface">
-        <div className="flex items-center justify-between border-b border-border px-5 py-4">
-          <h3 className="text-sm font-semibold text-textPrimary">
+      <div className="card">
+        <div className="card__header">
+          <h3 className="card__title">
             Órdenes recientes
           </h3>
           <button
             onClick={() => navigate('/work-orders')}
-            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+            className="card__action"
           >
             Ver todas <ChevronRight size={14} aria-hidden="true" />
           </button>

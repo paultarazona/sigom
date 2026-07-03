@@ -12,20 +12,20 @@ const columns: Column<MaintenancePlan>[] = [
   {
     key: 'name',
     header: 'Plan',
-    render: (row) => <span className="font-medium text-[#151B30]">{row.name}</span>,
+    render: (row) => <span className="font-medium" style={{ color: 'var(--color-text)' }}>{row.name}</span>,
   },
   {
     key: 'frequencyDays',
     header: 'Zona',
     render: (row) => (
-      <span className="text-sm text-[#72727A]">{`Cada ${row.frequencyDays} días`}</span>
+      <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{`Cada ${row.frequencyDays} días`}</span>
     ),
   },
   {
     key: 'isActive',
     header: 'Estado',
     render: (row) => (
-      <span className="inline-flex items-center rounded-full bg-[#F7F9FB] px-2.5 py-0.5 text-xs font-medium text-[#72727A]">
+      <span className="inline-flex items-center rounded-full bg-[#F7F9FB] px-2.5 py-0.5 text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>
         {row.isActive ? 'Activo' : 'Inactivo'}
       </span>
     ),
@@ -34,7 +34,7 @@ const columns: Column<MaintenancePlan>[] = [
     key: 'startDate',
     header: 'Fecha programada',
     render: (row) => (
-      <span className="text-sm text-[#72727A]">
+      <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
         {new Date(row.startDate).toLocaleDateString('es-PE')}
       </span>
     ),
@@ -48,13 +48,12 @@ export function MaintenancePlansPage() {
   })
 
   return (
-    <div className="p-6">
+    <div className="page">
       <PageHeader
-        title="Planes de Mantenimiento"
         description="Programación y seguimiento de mantenimientos preventivos"
       />
 
-      <div className="rounded-xl border border-[#C4D0D8] bg-white shadow-sm">
+      <div className="card">
         {isLoading && <LoadingState rows={6} />}
         {isError && <ErrorState onRetry={refetch} />}
         {data && data.data.length === 0 && (

@@ -4,16 +4,16 @@ import { StatCard } from '../../components/ui/StatCard'
 import { LoadingSpinner } from '../../components/ui/LoadingState'
 import { ErrorState } from '../../components/ui/ErrorState'
 import { EmptyState } from '../../components/ui/EmptyState'
-import { useDashboardSummary } from '../../hooks/useReports'
-import { ClipboardList, AlertCircle, Radio, Clock } from 'lucide-react'
+import { useDashboardSummary, useAverageAttentionTime } from '../../hooks/useReports'
+import { ClipboardList, Users, Radio, Clock } from 'lucide-react'
 
 export function ReportsPage() {
   const { data, isLoading, isError, refetch } = useDashboardSummary()
+  const avgTime = useAverageAttentionTime()
 
   return (
     <div className="p-6">
       <PageHeader
-        title="Reportes"
         description="Métricas y estadísticas operativas del sistema"
       />
 
@@ -30,9 +30,9 @@ export function ReportsPage() {
               variant="default"
             />
             <StatCard
-              title="Órdenes críticas"
-              value={data.critical}
-              icon={AlertCircle}
+              title="Asignadas"
+              value={data.assigned}
+              icon={Users}
               variant="danger"
             />
             <StatCard
@@ -43,7 +43,7 @@ export function ReportsPage() {
             />
             <StatCard
               title="Tiempo promedio"
-              value={`${data.averageResolutionHours}h`}
+              value={avgTime.data ? `${avgTime.data.averageHours}h` : '—'}
               icon={Clock}
               variant="success"
             />

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { PageHeader } from '../../components/ui/PageHeader'
+import { Button } from '../../components/ui/Button'
 import { useCreateWorkOrder } from '../../hooks/useWorkOrders'
 import type { Priority, WorkOrderStatus } from '../../types'
 
@@ -31,10 +32,10 @@ export function CreateWorkOrderPage() {
   })
 
   return (
-    <div className="p-6">
+    <div className="page">
       <button
         onClick={() => navigate(-1)}
-        className="mb-4 flex items-center gap-1.5 text-sm text-[#72727A] hover:text-[#151B30] transition-colors"
+        className="back-btn"
       >
         <ArrowLeft size={16} />
         Volver
@@ -48,41 +49,41 @@ export function CreateWorkOrderPage() {
       <div className="max-w-2xl">
         <form
           onSubmit={handleSubmit}
-          className="rounded-xl border border-[#C4D0D8] bg-white p-6 shadow-sm space-y-5"
+          className="form-panel"
         >
           <div>
-            <label className="block text-sm font-medium text-[#151B30] mb-1.5">
-              Título <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium text-textPrimary mb-1.5">
+              Título <span className="text-danger">*</span>
             </label>
             <input
               type="text"
               required
               placeholder="Descripción breve de la orden"
               {...field('title')}
-              className="w-full rounded-lg border border-[#C4D0D8] px-3 py-2 text-sm text-[#151B30] placeholder:text-[#72727A] focus:border-[#00236F] focus:outline-none focus:ring-2 focus:ring-[#00236F]/20 transition-colors"
+              className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-textPrimary placeholder:text-textSecondary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#151B30] mb-1.5">
+            <label className="block text-sm font-medium text-textPrimary mb-1.5">
               Descripción
             </label>
             <textarea
               rows={4}
               placeholder="Detallá el trabajo a realizar..."
               {...field('description')}
-              className="w-full rounded-lg border border-[#C4D0D8] px-3 py-2 text-sm text-[#151B30] placeholder:text-[#72727A] focus:border-[#00236F] focus:outline-none focus:ring-2 focus:ring-[#00236F]/20 transition-colors resize-none"
+              className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-textPrimary placeholder:text-textSecondary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors resize-none"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-[#151B30] mb-1.5">
+              <label className="block text-sm font-medium text-textPrimary mb-1.5">
                 Prioridad
               </label>
               <select
                 {...field('priority')}
-                className="w-full rounded-lg border border-[#C4D0D8] px-3 py-2 text-sm text-[#151B30] focus:border-[#00236F] focus:outline-none focus:ring-2 focus:ring-[#00236F]/20 transition-colors"
+                className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-textPrimary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors"
               >
                 <option value="LOW">Baja</option>
                 <option value="MEDIUM">Media</option>
@@ -92,34 +93,33 @@ export function CreateWorkOrderPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#151B30] mb-1.5">
-                Zona <span className="text-red-500">*</span>
+              <label className="block text-sm font-medium text-textPrimary mb-1.5">
+                Zona <span className="text-danger">*</span>
               </label>
               <input
                 type="text"
                 required
                 placeholder="ID de zona"
                 {...field('zoneId')}
-                className="w-full rounded-lg border border-[#C4D0D8] px-3 py-2 text-sm text-[#151B30] placeholder:text-[#72727A] focus:border-[#00236F] focus:outline-none focus:ring-2 focus:ring-[#00236F]/20 transition-colors"
+                className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-textPrimary placeholder:text-textSecondary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors"
               />
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-2">
-            <button
+          <div className="form-panel__cancel">
+            <Button
               type="button"
+              variant="secondary"
               onClick={() => navigate(-1)}
-              className="rounded-lg border border-[#C4D0D8] bg-white px-4 py-2 text-sm font-semibold text-[#151B30] hover:bg-[#F7F9FB] transition-colors"
             >
               Cancelar
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
               disabled={isPending}
-              className="rounded-lg bg-[#00236F] px-4 py-2 text-sm font-semibold text-white hover:bg-[#001A52] transition-colors disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-[#00236F]/40"
             >
               {isPending ? 'Guardando...' : 'Crear orden'}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

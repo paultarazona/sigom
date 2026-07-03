@@ -38,7 +38,7 @@ export const workOrdersApi = {
   suspend: (id: string, data: { reason: string }) =>
     client.patch<WorkOrder>(`/work-orders/${id}/suspend`, data),
 
-  resolve: (id: string, data: { finalDiagnosis: string; solution: string }) =>
+  resolve: (id: string, data: { finalDiagnosis: string; solutionApplied: string }) =>
     client.patch<WorkOrder>(`/work-orders/${id}/resolve`, data),
 
   close: (id: string) =>

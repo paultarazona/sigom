@@ -6,6 +6,7 @@ interface EmptyStateProps {
   description?: string
   icon?: LucideIcon
   action?: React.ReactNode
+  hint?: string
 }
 
 export function EmptyState({
@@ -13,15 +14,17 @@ export function EmptyState({
   description = 'No se encontraron registros.',
   icon: Icon = Inbox,
   action,
+  hint,
 }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center">
-      <div className="mb-4 rounded-full bg-background p-4">
-        <Icon size={32} className="text-border" strokeWidth={1.5} />
+    <div className="empty-state">
+      <div className="empty-state__icon">
+        <Icon size={32} strokeWidth={1.5} />
       </div>
-      <h3 className="text-base font-semibold text-textPrimary">{title}</h3>
-      <p className="mt-1 max-w-sm text-sm text-textSecondary">{description}</p>
-      {action && <div className="mt-4">{action}</div>}
+      <h3 className="empty-state__title">{title}</h3>
+      <p className="empty-state__description">{description}</p>
+      {hint && <p className="empty-state__hint">{hint}</p>}
+      {action && <div className="empty-state__action">{action}</div>}
     </div>
   )
 }

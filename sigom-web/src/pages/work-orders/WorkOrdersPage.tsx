@@ -42,9 +42,9 @@ const columns: Column<WorkOrder>[] = [
     ),
   },
   {
-    key: 'title',
+    key: 'type',
     header: 'Título',
-    render: (row) => <span className="text-textPrimary">{row.title}</span>,
+    render: (row) => <span className="text-textPrimary">{row.type}</span>,
   },
   {
     key: 'status',
@@ -83,9 +83,8 @@ export function WorkOrdersPage() {
   })
 
   return (
-    <div className="p-6">
+    <div className="page">
       <PageHeader
-        title="Órdenes de Trabajo"
         description="Gestión y seguimiento de órdenes operativas"
         actions={
           <Button onClick={() => navigate('/work-orders/new')}>
@@ -95,12 +94,12 @@ export function WorkOrdersPage() {
         }
       />
 
-      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div className="work-orders-filters">
         <SearchInput
           value={search}
           onChange={setSearch}
           placeholder="Buscar por código o título..."
-          className="sm:w-72"
+          className="search-input--sm"
         />
         <FilterBar>
           <FilterSelect
@@ -118,7 +117,7 @@ export function WorkOrdersPage() {
         </FilterBar>
       </div>
 
-      <div className="rounded-xl border border-border bg-surface shadow-sm">
+      <div className="card">
         {isLoading && <LoadingState rows={10} />}
         {isError && <ErrorState onRetry={refetch} />}
         {data && (
