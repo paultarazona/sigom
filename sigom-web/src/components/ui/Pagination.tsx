@@ -19,16 +19,15 @@ export function Pagination({
   const to = Math.min(page * limit, total)
 
   return (
-    <div className="flex items-center justify-between border-t border-border bg-surface px-4 py-3">
-      <p className="text-sm text-textSecondary">
-        Mostrando <span className="font-medium text-textPrimary">{from}–{to}</span> de{' '}
-        <span className="font-medium text-textPrimary">{total}</span> resultados
+    <div className="pagination">
+      <p className="pagination__info">
+        Mostrando <strong>{from}–{to}</strong> de <strong>{total}</strong> resultados
       </p>
-      <div className="flex items-center gap-1">
+      <div className="pagination__controls">
         <button
           onClick={() => onPageChange(page - 1)}
           disabled={page <= 1}
-          className="rounded-md p-1.5 text-textSecondary hover:bg-background disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="pagination__btn"
           aria-label="Página anterior"
         >
           <ChevronLeft size={16} />
@@ -42,18 +41,14 @@ export function Pagination({
           }, [])
           .map((p, idx) =>
             p === '...' ? (
-              <span key={`ellipsis-${idx}`} className="px-2 text-sm text-textSecondary">
+              <span key={`ellipsis-${idx}`} className="pagination__ellipsis">
                 …
               </span>
             ) : (
               <button
                 key={p}
                 onClick={() => onPageChange(p as number)}
-                className={`min-w-[32px] rounded-md px-2 py-1 text-sm font-medium transition-colors ${
-                  p === page
-                    ? 'bg-primary text-white'
-                    : 'text-textPrimary hover:bg-background'
-                }`}
+                className={`pagination__btn${p === page ? ' pagination__btn--active' : ''}`}
               >
                 {p}
               </button>
@@ -62,7 +57,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(page + 1)}
           disabled={page >= totalPages}
-          className="rounded-md p-1.5 text-textSecondary hover:bg-background disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="pagination__btn"
           aria-label="Página siguiente"
         >
           <ChevronRight size={16} />
