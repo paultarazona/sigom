@@ -1462,6 +1462,65 @@ a {
 }
 
 /* ============================================================
+   MODAL
+   ============================================================ */
+
+.modal {
+  border-radius: var(--radius-lg);
+  padding: 0;
+  border: none;
+  box-shadow: var(--shadow-md);
+  width: 100%;
+  max-width: 520px;
+}
+
+.modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+  padding: 16px 20px;
+}
+
+.modal__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.modal__close {
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  color: var(--color-text-muted);
+  transition: background-color 150ms;
+}
+
+.modal__close:hover {
+  background-color: var(--color-bg);
+}
+
+.modal__body {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ============================================================
    PAGE WRAPPERS
    ============================================================ */
 
@@ -1512,14 +1571,91 @@ a {
 
 /* Detail page inline form panel */
 .form-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
   background-color: var(--color-bg);
-  padding: 16px;
+  padding: 20px;
 }
 
 .form-panel__cancel {
   margin-top: 12px;
+}
+
+.form-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.form-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.form-field__required {
+  color: var(--color-danger);
+}
+
+.form-field__control {
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--color-text);
+  font-family: inherit;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+
+.form-field__control::placeholder {
+  color: var(--color-text-muted);
+}
+
+.form-field__control:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(0, 35, 111, 0.2);
+}
+
+.form-field__control--textarea {
+  resize: none;
+}
+
+.form-field__control--select {
+  appearance: none;
+  padding-right: 32px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B6B73' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid var(--color-border);
+  margin-top: 4px;
+  padding-top: 16px;
+}
+
+@media (max-width: 640px) {
+  .form-grid--2 {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Detail page info card */

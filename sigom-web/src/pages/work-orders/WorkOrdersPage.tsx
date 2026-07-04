@@ -11,6 +11,7 @@ import { PriorityBadge } from '../../components/ui/PriorityBadge'
 import { Pagination } from '../../components/ui/Pagination'
 import { LoadingState } from '../../components/ui/LoadingState'
 import { ErrorState } from '../../components/ui/ErrorState'
+import { CreateWorkOrderModal } from './CreateWorkOrderModal'
 import { useWorkOrders } from '../../hooks/useWorkOrders'
 import type { WorkOrder } from '../../types'
 
@@ -73,6 +74,7 @@ export function WorkOrdersPage() {
   const [status, setStatus] = useState('')
   const [priority, setPriority] = useState('')
   const [page, setPage] = useState(1)
+  const [isCreateOpen, setIsCreateOpen] = useState(false)
 
   const { data, isLoading, isError, refetch } = useWorkOrders({
     search,
@@ -87,12 +89,14 @@ export function WorkOrdersPage() {
       <PageHeader
         description="Gestión y seguimiento de órdenes operativas"
         actions={
-          <Button onClick={() => navigate('/work-orders/new')}>
+          <Button onClick={() => setIsCreateOpen(true)}>
             <Plus size={16} aria-hidden="true" />
             Nueva orden
           </Button>
         }
       />
+
+      <CreateWorkOrderModal open={isCreateOpen} onClose={() => setIsCreateOpen(false)} />
 
       <div className="work-orders-filters">
         <SearchInput

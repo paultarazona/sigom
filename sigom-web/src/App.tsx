@@ -6,7 +6,6 @@ import { AppHeader } from './components/layout/AppHeader'
 import { DashboardPage } from './pages/dashboard/DashboardPage'
 import { WorkOrdersPage } from './pages/work-orders/WorkOrdersPage'
 import { WorkOrderDetailPage } from './pages/work-orders/WorkOrderDetailPage'
-import { CreateWorkOrderPage } from './pages/work-orders/CreateWorkOrderPage'
 import { InspectionsPage } from './pages/inspections/InspectionsPage'
 import { EvidencesPage } from './pages/evidences/EvidencesPage'
 import { CrewsPage } from './pages/crews/CrewsPage'
@@ -36,7 +35,6 @@ function AppLayout() {
           <Routes>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/work-orders" element={<WorkOrdersPage />} />
-            <Route path="/work-orders/new" element={<CreateWorkOrderPage />} />
             <Route path="/work-orders/:id" element={<WorkOrderDetailPage />} />
             <Route path="/inspections" element={<InspectionsPage />} />
             <Route path="/evidences" element={<EvidencesPage />} />
