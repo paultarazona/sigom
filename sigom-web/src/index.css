@@ -1481,12 +1481,16 @@ a {
    ============================================================ */
 
 .modal {
+  position: fixed;
+  inset: 0;
+  margin: auto;
   border-radius: var(--radius-lg);
   padding: 0;
   border: none;
   box-shadow: var(--shadow-md);
   width: 100%;
   max-width: 520px;
+  max-height: calc(100vh - 48px);
 }
 
 .modal::backdrop {
