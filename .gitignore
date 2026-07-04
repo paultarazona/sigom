@@ -39,3 +39,10 @@ coverage/
 
 # Agent tooling
 .atl/
+.claude/
+.impeccable/
+openspec/
+
+# Working notes
+configuraciones_parametros.md
+frontend_des.md
