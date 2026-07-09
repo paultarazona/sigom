@@ -10,30 +10,32 @@ import type { MaintenancePlan } from '../../types'
 
 const columns: Column<MaintenancePlan>[] = [
   {
-    key: 'title',
+    key: 'name',
     header: 'Plan',
-    render: (row) => <span className="font-medium text-[#151B30]">{row.title}</span>,
+    render: (row) => <span className="font-medium" style={{ color: 'var(--color-text)' }}>{row.name}</span>,
   },
   {
-    key: 'zoneId',
+    key: 'frequencyDays',
     header: 'Zona',
-    render: (row) => <span className="text-sm text-[#72727A]">{row.zoneId}</span>,
+    render: (row) => (
+      <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{`Cada ${row.frequencyDays} días`}</span>
+    ),
   },
   {
-    key: 'status',
+    key: 'isActive',
     header: 'Estado',
     render: (row) => (
-      <span className="inline-flex items-center rounded-full bg-[#F7F9FB] px-2.5 py-0.5 text-xs font-medium text-[#72727A]">
-        {row.status}
+      <span className="inline-flex items-center rounded-full bg-[#F7F9FB] px-2.5 py-0.5 text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>
+        {row.isActive ? 'Activo' : 'Inactivo'}
       </span>
     ),
   },
   {
-    key: 'scheduledDate',
+    key: 'startDate',
     header: 'Fecha programada',
     render: (row) => (
-      <span className="text-sm text-[#72727A]">
-        {new Date(row.scheduledDate).toLocaleDateString('es-PE')}
+      <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+        {new Date(row.startDate).toLocaleDateString('es-PE')}
       </span>
     ),
   },
@@ -46,14 +48,13 @@ export function MaintenancePlansPage() {
   })
 
   return (
-    <div className="p-6">
+    <div className="page">
       <PageHeader
-        title="Planes de Mantenimiento"
         description="Programación y seguimiento de mantenimientos preventivos"
       />
 
-      <div className="rounded-xl border border-[#C4D0D8] bg-white shadow-sm">
-        {isLoading && <LoadingState rows={6} />}
+      <div className="card">
+        {isLoading && <LoadingState variant="overlay" />}
         {isError && <ErrorState onRetry={refetch} />}
         {data && data.data.length === 0 && (
           <EmptyState

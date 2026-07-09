@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { workOrdersApi, type WorkOrderFilters } from '../api/work-orders'
 import type { WorkOrder } from '../types'
+import { toast } from '../lib/toast'
 
 export function useWorkOrders(filters: WorkOrderFilters = {}) {
   return useQuery({
@@ -21,7 +22,13 @@ export function useCreateWorkOrder() {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: (data: Partial<WorkOrder>) => workOrdersApi.create(data).then((r) => r.data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['work-orders'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['work-orders'] })
+      toast.success('Orden creada correctamente')
+    },
+    onError: () => {
+      toast.error('Error al crear la orden')
+    },
   })
 }
 
@@ -71,7 +78,7 @@ export function useSuspendWorkOrder() {
 export function useResolveWorkOrder() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: { finalDiagnosis: string; solution: string } }) =>
+    mutationFn: ({ id, data }: { id: string; data: { finalDiagnosis: string; solutionApplied: string } }) =>
       workOrdersApi.resolve(id, data).then((r) => r.data),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['work-orders'] }),
   })

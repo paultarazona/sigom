@@ -11,6 +11,7 @@ import { PriorityBadge } from '../../components/ui/PriorityBadge'
 import { Pagination } from '../../components/ui/Pagination'
 import { LoadingState } from '../../components/ui/LoadingState'
 import { ErrorState } from '../../components/ui/ErrorState'
+import { CreateWorkOrderModal } from './CreateWorkOrderModal'
 import { useWorkOrders } from '../../hooks/useWorkOrders'
 import type { WorkOrder } from '../../types'
 
@@ -42,9 +43,9 @@ const columns: Column<WorkOrder>[] = [
     ),
   },
   {
-    key: 'title',
+    key: 'type',
     header: 'Título',
-    render: (row) => <span className="text-textPrimary">{row.title}</span>,
+    render: (row) => <span className="text-textPrimary">{row.type}</span>,
   },
   {
     key: 'status',
@@ -73,6 +74,7 @@ export function WorkOrdersPage() {
   const [status, setStatus] = useState('')
   const [priority, setPriority] = useState('')
   const [page, setPage] = useState(1)
+  const [isCreateOpen, setIsCreateOpen] = useState(false)
 
   const { data, isLoading, isError, refetch } = useWorkOrders({
     search,
@@ -83,24 +85,25 @@ export function WorkOrdersPage() {
   })
 
   return (
-    <div className="p-6">
+    <div className="page">
       <PageHeader
-        title="Órdenes de Trabajo"
         description="Gestión y seguimiento de órdenes operativas"
         actions={
-          <Button onClick={() => navigate('/work-orders/new')}>
+          <Button onClick={() => setIsCreateOpen(true)}>
             <Plus size={16} aria-hidden="true" />
             Nueva orden
           </Button>
         }
       />
 
-      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <CreateWorkOrderModal open={isCreateOpen} onClose={() => setIsCreateOpen(false)} />
+
+      <div className="work-orders-filters">
         <SearchInput
           value={search}
           onChange={setSearch}
           placeholder="Buscar por código o título..."
-          className="sm:w-72"
+          className="search-input--sm"
         />
         <FilterBar>
           <FilterSelect
@@ -118,8 +121,8 @@ export function WorkOrdersPage() {
         </FilterBar>
       </div>
 
-      <div className="rounded-xl border border-border bg-surface shadow-sm">
-        {isLoading && <LoadingState rows={10} />}
+      <div className="card">
+        {isLoading && <LoadingState variant="overlay" />}
         {isError && <ErrorState onRetry={refetch} />}
         {data && (
           <>

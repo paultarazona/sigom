@@ -11,29 +11,29 @@ const columns: Column<Inspection>[] = [
     key: 'id',
     header: 'ID',
     render: (row) => (
-      <span className="font-mono text-xs text-[#72727A]">{row.id.slice(0, 8)}…</span>
+      <span className="font-mono text-xs" style={{ color: 'var(--color-text-muted)' }}>{row.code}</span>
     ),
   },
   {
     key: 'workOrderId',
     header: 'Orden',
     render: (row) => (
-      <span className="font-mono text-xs text-[#00236F]">{row.workOrderId.slice(0, 8)}…</span>
+      <span className="font-mono text-xs" style={{ color: 'var(--color-primary)' }}>{row.workOrder?.code ?? row.workOrderId}</span>
     ),
   },
   {
-    key: 'findings',
+    key: 'observation',
     header: 'Hallazgos',
     render: (row) => (
-      <span className="max-w-xs truncate block text-[#151B30]">{row.findings}</span>
+      <span className="max-w-xs truncate block" style={{ color: 'var(--color-text)' }}>{row.observation}</span>
     ),
   },
   {
-    key: 'inspectedAt',
+    key: 'registeredAt',
     header: 'Fecha',
     render: (row) => (
-      <span className="text-sm text-[#72727A]">
-        {new Date(row.inspectedAt).toLocaleDateString('es-PE')}
+      <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+        {new Date(row.registeredAt).toLocaleDateString('es-PE')}
       </span>
     ),
   },
@@ -46,14 +46,13 @@ export function InspectionsPage() {
   })
 
   return (
-    <div className="p-6">
+    <div className="page">
       <PageHeader
-        title="Inspecciones"
         description="Registro de inspecciones realizadas en campo"
       />
 
-      <div className="rounded-xl border border-[#C4D0D8] bg-white shadow-sm">
-        {isLoading && <LoadingState rows={8} />}
+      <div className="card">
+        {isLoading && <LoadingState variant="overlay" />}
         {isError && <ErrorState onRetry={refetch} />}
         {data && (
           <DataTable

@@ -14,56 +14,101 @@ export type Role = 'ADMIN' | 'SUPERVISOR' | 'TECHNICIAN' | 'VIEWER'
 export interface WorkOrder {
   id: string
   code: string
-  title: string
-  description: string
+  type: string
+  initialObservation?: string
   status: WorkOrderStatus
   priority: Priority
   zoneId: string
-  assignedTo?: string
+  scheduledAt?: string
+  createdById?: string
+  assignedToId?: string
   finalDiagnosis?: string
-  solution?: string
+  solutionApplied?: string
+  assignedTo?: {
+    id: string
+    firstName: string
+    lastName: string
+  }
   createdAt: string
   updatedAt: string
 }
 
 export interface Technician {
   id: string
-  name: string
+  firstName: string
+  lastName: string
   email: string
   isActive: boolean
-  activeOrdersCount: number
+  _count: {
+    assignedOrders: number
+  }
 }
 
 export interface Crew {
   id: string
   name: string
   leaderId: string
-  members: Technician[]
+  leader: {
+    id: string
+    firstName: string
+    lastName: string
+  }
+  members?: Technician[]
+  _count: {
+    members: number
+  }
 }
 
 export interface Inspection {
   id: string
+  code: string
   workOrderId: string
-  findings: string
-  inspectedAt: string
-  technicianId: string
+  inspectionType?: string
+  result?: string
+  observation: string
+  registeredAt: string
+  registeredById?: string
+  registeredBy?: {
+    id: string
+    firstName: string
+    lastName: string
+  }
+  workOrder?: {
+    id: string
+    code: string
+  }
 }
 
 export interface Evidence {
   id: string
+  code: string
   workOrderId: string
-  fileUrl: string
+  filePath: string
+  originalName?: string
   mimeType: string
-  uploadedAt: string
+  observation?: string
+  registeredAt: string
+  registeredById?: string
+  inspectionId?: string
+  registeredBy?: {
+    id: string
+    firstName: string
+    lastName: string
+  }
+  workOrder?: {
+    id: string
+    code: string
+  }
 }
 
 export interface MaintenancePlan {
   id: string
-  title: string
+  code: string
+  name: string
   description: string
-  scheduledDate: string
-  zoneId: string
-  status: string
+  startDate: string
+  frequencyDays: number
+  isActive: boolean
 }
 
 export interface PaginatedResponse<T> {
@@ -77,8 +122,17 @@ export interface PaginatedResponse<T> {
 }
 
 export interface DashboardSummary {
+  total: number
   pending: number
-  critical: number
+  assigned: number
   inField: number
-  averageResolutionHours: number
+  suspended: number
+  resolved: number
+  closed: number
+  cancelled: number
+}
+
+export interface AverageAttentionTime {
+  averageHours: number
+  count: number
 }

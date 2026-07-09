@@ -1,9 +1,12 @@
 import client from './client'
-import type { DashboardSummary } from '../types'
+import type { DashboardSummary, AverageAttentionTime } from '../types'
 
 export const reportsApi = {
   summary: () =>
-    client.get<DashboardSummary>('/reports/summary'),
+    client.get<{ data: DashboardSummary }>('/reports/summary'),
+
+  averageAttentionTime: () =>
+    client.get<{ data: AverageAttentionTime }>('/reports/average-attention-time'),
 
   workOrdersByZone: () =>
     client.get('/reports/work-orders-by-zone'),

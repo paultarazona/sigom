@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom'
-import { Bell } from 'lucide-react'
+import { Bell, Menu } from 'lucide-react'
 
 const routeTitles: Record<string, string> = {
   '/': 'Dashboard',
@@ -12,32 +12,40 @@ const routeTitles: Record<string, string> = {
   '/technicians': 'Técnicos',
 }
 
-export function AppHeader() {
+interface AppHeaderProps {
+  onToggleSidebar: () => void
+}
+
+export function AppHeader({ onToggleSidebar }: AppHeaderProps) {
   const { pathname } = useLocation()
 
   const base = '/' + pathname.split('/')[1]
   const title = routeTitles[base] ?? 'SIGOM'
 
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between border-b border-border bg-surface px-6">
-      <h2 className="text-base font-semibold text-textPrimary">{title}</h2>
-
-      <div className="flex items-center gap-3">
+    <header className="header">
+      <div className="header__left">
         <button
-          className="relative rounded-lg p-2 text-textSecondary hover:bg-background transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30"
-          aria-label="Notificaciones"
+          onClick={onToggleSidebar}
+          className="header__menu-btn"
+          aria-label="Abrir menú"
         >
+          <Menu size={20} />
+        </button>
+        <h2 className="header__title">{title}</h2>
+      </div>
+
+      <div className="header__right">
+        <button className="header__notification-btn" aria-label="Notificaciones">
           <Bell size={18} strokeWidth={1.75} />
-          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-danger" />
+          <span className="header__notification-dot" aria-hidden="true" />
         </button>
 
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white select-none">
-            SU
-          </div>
-          <div className="hidden sm:block leading-tight">
-            <p className="text-sm font-medium text-textPrimary">Supervisor</p>
-            <p className="text-xs text-textSecondary">ENOSA</p>
+        <div className="header__user">
+          <div className="header__avatar" aria-hidden="true">SU</div>
+          <div className="header__user-info">
+            <p className="header__user-name">Supervisor</p>
+            <p className="header__user-role">ENOSA</p>
           </div>
         </div>
       </div>

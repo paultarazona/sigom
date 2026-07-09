@@ -13,34 +13,35 @@ const columns: Column<Evidence>[] = [
     key: 'id',
     header: 'ID',
     render: (row) => (
-      <span className="font-mono text-xs text-[#72727A]">{row.id.slice(0, 8)}…</span>
+      <span className="font-mono text-xs" style={{ color: 'var(--color-text-muted)' }}>{row.code}</span>
     ),
   },
   {
     key: 'workOrderId',
     header: 'Orden',
     render: (row) => (
-      <span className="font-mono text-xs text-[#00236F]">{row.workOrderId.slice(0, 8)}…</span>
+      <span className="font-mono text-xs" style={{ color: 'var(--color-primary)' }}>{row.workOrder?.code ?? row.workOrderId}</span>
     ),
   },
   {
     key: 'mimeType',
     header: 'Tipo',
     render: (row) => (
-      <span className="rounded-md bg-[#F7F9FB] px-2 py-0.5 text-xs text-[#72727A]">
+      <span className="rounded-md bg-[#F7F9FB] px-2 py-0.5 text-xs" style={{ color: 'var(--color-text-muted)' }}>
         {row.mimeType}
       </span>
     ),
   },
   {
-    key: 'fileUrl',
+    key: 'filePath',
     header: 'Archivo',
     render: (row) => (
       <a
-        href={row.fileUrl}
+        href={`http://localhost:3000/${row.filePath?.replace(/^\//, '')}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-sm text-[#00236F] hover:underline"
+        className="text-sm hover:underline"
+        style={{ color: 'var(--color-primary)' }}
         onClick={(e) => e.stopPropagation()}
       >
         Ver archivo
@@ -48,11 +49,11 @@ const columns: Column<Evidence>[] = [
     ),
   },
   {
-    key: 'uploadedAt',
+    key: 'registeredAt',
     header: 'Subida',
     render: (row) => (
-      <span className="text-sm text-[#72727A]">
-        {new Date(row.uploadedAt).toLocaleDateString('es-PE')}
+      <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+        {new Date(row.registeredAt).toLocaleDateString('es-PE')}
       </span>
     ),
   },
@@ -65,14 +66,13 @@ export function EvidencesPage() {
   })
 
   return (
-    <div className="p-6">
+    <div className="page">
       <PageHeader
-        title="Evidencias"
         description="Archivos y fotografías adjuntas a las órdenes de trabajo"
       />
 
-      <div className="rounded-xl border border-[#C4D0D8] bg-white shadow-sm">
-        {isLoading && <LoadingState rows={8} />}
+      <div className="card">
+        {isLoading && <LoadingState variant="overlay" />}
         {isError && <ErrorState onRetry={refetch} />}
         {data && data.data.length === 0 && (
           <EmptyState

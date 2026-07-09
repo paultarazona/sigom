@@ -12,20 +12,24 @@ const columns: Column<Crew>[] = [
   {
     key: 'name',
     header: 'Cuadrilla',
-    render: (row) => <span className="font-medium text-[#151B30]">{row.name}</span>,
+    render: (row) => <span className="font-medium" style={{ color: 'var(--color-text)' }}>{row.name}</span>,
   },
   {
     key: 'leaderId',
     header: 'Líder',
-    render: (row) => <span className="text-sm text-[#72727A]">{row.leaderId}</span>,
+    render: (row) => (
+      <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+        {`${row.leader?.firstName ?? ''} ${row.leader?.lastName ?? ''}`.trim()}
+      </span>
+    ),
   },
   {
     key: 'members',
     header: 'Integrantes',
     render: (row) => (
-      <span className="inline-flex items-center gap-1 text-sm text-[#151B30]">
-        <Users size={14} className="text-[#72727A]" />
-        {row.members?.length ?? 0}
+      <span className="inline-flex items-center gap-1 text-sm" style={{ color: 'var(--color-text)' }}>
+        <Users size={14} style={{ color: 'var(--color-text-muted)' }} />
+        {row._count?.members ?? 0}
       </span>
     ),
   },
@@ -38,14 +42,13 @@ export function CrewsPage() {
   })
 
   return (
-    <div className="p-6">
+    <div className="page">
       <PageHeader
-        title="Cuadrillas"
         description="Equipos de trabajo y sus integrantes"
       />
 
-      <div className="rounded-xl border border-[#C4D0D8] bg-white shadow-sm">
-        {isLoading && <LoadingState rows={6} />}
+      <div className="card">
+        {isLoading && <LoadingState variant="overlay" />}
         {isError && <ErrorState onRetry={refetch} />}
         {data && data.data.length === 0 && (
           <EmptyState

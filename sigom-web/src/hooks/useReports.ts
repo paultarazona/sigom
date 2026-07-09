@@ -4,7 +4,15 @@ import { reportsApi } from '../api/reports'
 export function useDashboardSummary() {
   return useQuery({
     queryKey: ['reports', 'summary'],
-    queryFn: () => reportsApi.summary().then((r) => r.data),
+    queryFn: () => reportsApi.summary().then((r) => r.data.data),
+    staleTime: 60_000,
+  })
+}
+
+export function useAverageAttentionTime() {
+  return useQuery({
+    queryKey: ['reports', 'average-attention-time'],
+    queryFn: () => reportsApi.averageAttentionTime().then((r) => r.data.data),
     staleTime: 60_000,
   })
 }

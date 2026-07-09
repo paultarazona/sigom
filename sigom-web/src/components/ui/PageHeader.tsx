@@ -1,21 +1,22 @@
 import type { ReactNode } from 'react'
 
 interface PageHeaderProps {
-  title: string
+  title?: string
   description?: string
   actions?: ReactNode
 }
 
 export function PageHeader({ title, description, actions }: PageHeaderProps) {
+  if (!title && !description && !actions) return null
   return (
-    <div className="flex items-start justify-between gap-4 border-b border-border pb-4 mb-6">
+    <div className="page-header">
       <div>
-        <h1 className="text-2xl font-bold text-textPrimary">{title}</h1>
+        {title && <h1 className="page-header__title">{title}</h1>}
         {description && (
-          <p className="mt-1 text-sm text-textSecondary">{description}</p>
+          <p className="page-header__description">{description}</p>
         )}
       </div>
-      {actions && <div className="shrink-0 flex items-center gap-2">{actions}</div>}
+      {actions && <div className="page-header__actions">{actions}</div>}
     </div>
   )
 }

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AppSidebar } from './components/layout/AppSidebar'
@@ -5,13 +6,13 @@ import { AppHeader } from './components/layout/AppHeader'
 import { DashboardPage } from './pages/dashboard/DashboardPage'
 import { WorkOrdersPage } from './pages/work-orders/WorkOrdersPage'
 import { WorkOrderDetailPage } from './pages/work-orders/WorkOrderDetailPage'
-import { CreateWorkOrderPage } from './pages/work-orders/CreateWorkOrderPage'
 import { InspectionsPage } from './pages/inspections/InspectionsPage'
 import { EvidencesPage } from './pages/evidences/EvidencesPage'
 import { CrewsPage } from './pages/crews/CrewsPage'
 import { MaintenancePlansPage } from './pages/maintenance-plans/MaintenancePlansPage'
 import { ReportsPage } from './pages/reports/ReportsPage'
 import { TechniciansPage } from './pages/technicians/TechniciansPage'
+import { ToastContainer } from './components/ui/Toast'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,16 +24,17 @@ const queryClient = new QueryClient({
 })
 
 function AppLayout() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
   return (
-    <div className="flex h-screen overflow-hidden bg-[#F7F9FB]">
-      <AppSidebar />
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <AppHeader />
-        <main className="flex-1 overflow-y-auto">
+    <div className="app-layout">
+      <AppSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <div className="app-layout__body">
+        <AppHeader onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+        <main className="app-layout__main">
           <Routes>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/work-orders" element={<WorkOrdersPage />} />
-            <Route path="/work-orders/new" element={<CreateWorkOrderPage />} />
             <Route path="/work-orders/:id" element={<WorkOrderDetailPage />} />
             <Route path="/inspections" element={<InspectionsPage />} />
             <Route path="/evidences" element={<EvidencesPage />} />
@@ -43,6 +45,7 @@ function AppLayout() {
           </Routes>
         </main>
       </div>
+      <ToastContainer />
     </div>
   )
 }

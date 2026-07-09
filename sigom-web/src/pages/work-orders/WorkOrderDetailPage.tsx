@@ -45,9 +45,9 @@ function FormPanel({
   onClose: () => void
 }) {
   return (
-    <div className="rounded-xl border border-border bg-background p-4">
+    <div className="form-panel">
       {children}
-      <div className="mt-3">
+      <div className="form-panel__cancel">
         <Button variant="secondary" onClick={onClose}>Cancelar</Button>
       </div>
     </div>
@@ -118,7 +118,7 @@ function ActionsPanel({ id, status }: ActionsPanelProps) {
   function handleResolve() {
     if (!finalDiagnosis.trim() || !solution.trim()) return
     resolve.mutate(
-      { id, data: { finalDiagnosis: finalDiagnosis.trim(), solution: solution.trim() } },
+      { id, data: { finalDiagnosis: finalDiagnosis.trim(), solutionApplied: solution.trim() } },
       { onSuccess: resetPanels },
     )
   }
@@ -143,11 +143,11 @@ function ActionsPanel({ id, status }: ActionsPanelProps) {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-5 shadow-sm">
-      <h3 className="mb-4 text-sm font-semibold text-textPrimary">Acciones</h3>
+    <div className="actions-panel">
+      <h3 className="actions-panel__heading">Acciones</h3>
 
       {/* Button row */}
-      <div className="flex flex-wrap gap-2">
+      <div className="actions-panel__buttons">
         {status === 'PENDING' && (
           <>
             <Button onClick={() => setActivePanel('assign')} disabled={isWorking}>
@@ -339,10 +339,10 @@ export function WorkOrderDetailPage() {
   const { data, isLoading, isError, refetch } = useWorkOrder(id ?? '')
 
   return (
-    <div className="p-6">
+    <div className="page">
       <button
         onClick={() => navigate(-1)}
-        className="mb-4 flex items-center gap-1.5 text-sm text-textSecondary hover:text-textPrimary transition-colors"
+        className="back-btn"
       >
         <ArrowLeft size={16} />
         Volver
@@ -354,7 +354,7 @@ export function WorkOrderDetailPage() {
       {data && (
         <>
           <PageHeader
-            title={data.title}
+            title={data.type}
             description={`Código: ${data.code}`}
             actions={
               <div className="flex items-center gap-2">
@@ -364,16 +364,16 @@ export function WorkOrderDetailPage() {
             }
           />
 
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <div className="lg:col-span-2 space-y-4">
-              <div className="rounded-xl border border-border bg-surface p-5 shadow-sm">
-                <h3 className="mb-3 text-sm font-semibold text-textPrimary">Descripción</h3>
-                <p className="text-sm text-textSecondary leading-relaxed">{data.description}</p>
+          <div className="detail-grid">
+            <div className="detail-grid__main">
+              <div className="detail-card">
+                <h3 className="detail-card__heading">Descripción</h3>
+                <p className="detail-card__text">{data.initialObservation || 'Sin observación inicial.'}</p>
               </div>
 
-              {(data.finalDiagnosis || data.solution) && (
-                <div className="rounded-xl border border-border bg-surface p-5 shadow-sm">
-                  <h3 className="mb-3 text-sm font-semibold text-textPrimary">Resolución</h3>
+              {(data.finalDiagnosis || data.solutionApplied) && (
+                <div className="detail-card">
+                  <h3 className="detail-card__heading">Resolución</h3>
                   {data.finalDiagnosis && (
                     <div className="mb-3">
                       <p className="text-xs font-semibold text-textSecondary uppercase tracking-wide mb-1">
@@ -382,12 +382,12 @@ export function WorkOrderDetailPage() {
                       <p className="text-sm text-textPrimary leading-relaxed">{data.finalDiagnosis}</p>
                     </div>
                   )}
-                  {data.solution && (
+                  {data.solutionApplied && (
                     <div>
                       <p className="text-xs font-semibold text-textSecondary uppercase tracking-wide mb-1">
                         Solución
                       </p>
-                      <p className="text-sm text-textPrimary leading-relaxed">{data.solution}</p>
+                      <p className="text-sm text-textPrimary leading-relaxed">{data.solutionApplied}</p>
                     </div>
                   )}
                 </div>
@@ -396,27 +396,31 @@ export function WorkOrderDetailPage() {
               <ActionsPanel id={data.id} status={data.status} />
             </div>
 
-            <div className="space-y-4">
-              <div className="rounded-xl border border-border bg-surface p-5 shadow-sm">
-                <h3 className="mb-3 text-sm font-semibold text-textPrimary">Detalles</h3>
-                <dl className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <dt className="text-textSecondary">Zona</dt>
-                    <dd className="font-medium text-textPrimary">{data.zoneId}</dd>
+            <div className="detail-grid__side">
+              <div className="detail-card">
+                <h3 className="detail-card__heading">Detalles</h3>
+                <dl className="detail-card__dl">
+                  <div className="detail-card__row">
+                    <dt className="detail-card__dt">Zona</dt>
+                    <dd className="detail-card__dd">{data.zoneId}</dd>
                   </div>
-                  <div className="flex justify-between">
-                    <dt className="text-textSecondary">Asignado a</dt>
-                    <dd className="font-medium text-textPrimary">{data.assignedTo ?? '—'}</dd>
+                  <div className="detail-card__row">
+                    <dt className="detail-card__dt">Asignado a</dt>
+                    <dd className="detail-card__dd">
+                      {data.assignedTo
+                        ? `${data.assignedTo.firstName} ${data.assignedTo.lastName}`
+                        : '—'}
+                    </dd>
                   </div>
-                  <div className="flex justify-between">
-                    <dt className="text-textSecondary">Creada</dt>
-                    <dd className="font-medium text-textPrimary">
+                  <div className="detail-card__row">
+                    <dt className="detail-card__dt">Creada</dt>
+                    <dd className="detail-card__dd">
                       {new Date(data.createdAt).toLocaleDateString('es-PE')}
                     </dd>
                   </div>
-                  <div className="flex justify-between">
-                    <dt className="text-textSecondary">Actualizada</dt>
-                    <dd className="font-medium text-textPrimary">
+                  <div className="detail-card__row">
+                    <dt className="detail-card__dt">Actualizada</dt>
+                    <dd className="detail-card__dd">
                       {new Date(data.updatedAt).toLocaleDateString('es-PE')}
                     </dd>
                   </div>
@@ -424,12 +428,12 @@ export function WorkOrderDetailPage() {
               </div>
 
               {(data.status === 'CLOSED' || data.status === 'CANCELLED') && (
-                <div className="rounded-xl border border-border bg-surface p-5 shadow-sm">
+                <div className="detail-card">
                   <span
-                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
+                    className={`status-pill${
                       data.status === 'CLOSED'
-                        ? 'bg-gray-100 text-gray-600'
-                        : 'bg-red-50 text-red-700'
+                        ? ' status-pill--closed'
+                        : ' status-pill--cancelled'
                     }`}
                   >
                     {data.status === 'CLOSED' ? 'Cerrada' : 'Cancelada'}

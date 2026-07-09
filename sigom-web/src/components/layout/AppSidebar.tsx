@@ -27,54 +27,74 @@ const navItems: NavItem[] = [
   { to: '/technicians', label: 'Técnicos', icon: HardHat },
 ]
 
-export function AppSidebar() {
+interface AppSidebarProps {
+  isOpen: boolean
+  onClose: () => void
+}
+
+export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
   return (
-    <aside className="flex h-screen w-64 shrink-0 flex-col bg-[#00236F]">
-      {/* Logo */}
-      <div className="flex h-16 items-center gap-2.5 border-b border-white/10 bg-[#001A52] px-5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/15">
-          <span className="text-xs font-bold text-white">SG</span>
-        </div>
-        <div className="leading-tight">
-          <p className="text-sm font-bold text-white">SIGOM</p>
-          <p className="text-[10px] text-[#57DFFE]/70">ENOSA</p>
-        </div>
-      </div>
+    <>
+      {/* Mobile backdrop */}
+      {isOpen && (
+        <div
+          className="sidebar__backdrop"
+          onClick={onClose}
+        />
+      )}
 
-      {/* Nav */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4">
-        <ul className="space-y-0.5">
-          {navItems.map(({ to, label, icon: Icon }) => (
-            <li key={to}>
-              <NavLink
-                to={to}
-                end={to === '/'}
-                className={({ isActive }) =>
-                  isActive
-                    ? 'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-all duration-150 bg-white/[0.12] text-white'
-                    : 'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150 text-white/60 hover:bg-white/[0.07] hover:text-white'
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    <Icon
-                      size={18}
-                      strokeWidth={isActive ? 2 : 1.75}
-                      className={isActive ? 'text-[#57DFFE]' : 'text-white/50'}
-                    />
-                    <span>{label}</span>
-                  </>
-                )}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <aside className={`sidebar${isOpen ? ' sidebar--open' : ''}`}>
+        {/* Logo */}
+        <div className="sidebar__logo">
+          <div className="sidebar__logo-icon">SG</div>
+          <div className="sidebar__logo-text-wrap">
+            <p className="sidebar__logo-text">SIGOM</p>
+            <p className="sidebar__logo-subtitle">ENOSA</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="sidebar__close-btn"
+            aria-label="Cerrar menú"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
 
-      {/* Footer */}
-      <div className="border-t border-white/10 px-4 py-3">
-        <p className="text-[10px] text-white/30">v1.0.0 — SIGOM Web</p>
-      </div>
-    </aside>
+        {/* Nav */}
+        <nav className="sidebar__nav">
+          <p className="sidebar__nav-label">Navegación</p>
+          <ul className="sidebar__nav-list">
+            {navItems.map(({ to, label, icon: Icon }) => (
+              <li key={to}>
+                <NavLink
+                  to={to}
+                  end={to === '/'}
+                  onClick={onClose}
+                  className={({ isActive }) =>
+                    isActive ? 'sidebar__nav-link sidebar__nav-link--active' : 'sidebar__nav-link'
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <Icon
+                        size={18}
+                        strokeWidth={isActive ? 2 : 1.75}
+                        className={isActive ? 'sidebar__nav-icon sidebar__nav-icon--active' : 'sidebar__nav-icon'}
+                      />
+                      <span>{label}</span>
+                    </>
+                  )}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Footer */}
+        <div className="sidebar__footer">
+          <p>v1.0.0 — SIGOM Web</p>
+        </div>
+      </aside>
+    </>
   )
 }
