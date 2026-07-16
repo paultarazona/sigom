@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# Local Pi runtime state
+.atl/
+.pi/
+.pi-subagents/
