@@ -37,7 +37,7 @@ const columns: Column<Evidence>[] = [
     header: 'Archivo',
     render: (row) => (
       <a
-        href={`http://localhost:3000/${row.filePath?.replace(/^\//, '')}`}
+        href={`http://localhost:3001/${row.filePath?.replace(/^\//, '')}`}
         target="_blank"
         rel="noopener noreferrer"
         className="text-sm hover:underline"
