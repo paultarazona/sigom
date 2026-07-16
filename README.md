@@ -82,7 +82,7 @@ El backend usa PostgreSQL y JWT. Configura las variables desde los ejemplos incl
 ```txt
 DATABASE_URL="postgresql://user:password@localhost:5432/sigom"
 JWT_SECRET="change-me"
-PORT=3000
+PORT=3001
 ```
 
 ## Contrato de API

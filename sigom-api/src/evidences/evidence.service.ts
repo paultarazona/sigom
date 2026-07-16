@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  ConflictException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateEvidenceDto } from './dto/create-evidence.dto';
 import { UpdateEvidenceDto } from './dto/update-evidence.dto';
@@ -74,7 +69,8 @@ export class EvidenceService {
     });
 
     if (!user) throw new NotFoundException('Usuario no encontrado.');
-    if (!user.isActive) throw new BadRequestException({ code: 'USER_NOT_ACTIVE', message: 'El usuario no está activo.' });
+    if (!user.isActive)
+      throw new BadRequestException({ code: 'USER_NOT_ACTIVE', message: 'El usuario no está activo.' });
 
     for (let attempt = 0; attempt < 3; attempt++) {
       const code = await this.generateCode();
@@ -106,7 +102,10 @@ export class EvidenceService {
         throw err;
       }
     }
-    throw new ConflictException({ code: 'CODE_GENERATION_FAILED', message: 'No se pudo generar un código único. Intente nuevamente.' });
+    throw new ConflictException({
+      code: 'CODE_GENERATION_FAILED',
+      message: 'No se pudo generar un código único. Intente nuevamente.',
+    });
   }
 
   async findAll(query: QueryEvidenceDto) {
