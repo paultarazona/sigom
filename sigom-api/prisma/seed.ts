@@ -17,6 +17,7 @@ async function main() {
     { id: uuidv4(), email: 'pedro.torres@sigom.pe', password: 'tech123', firstName: 'Pedro', lastName: 'Torres', role: UserRole.TECHNICIAN },
     { id: uuidv4(), email: 'rosa.diaz@sigom.pe', password: 'tech123', firstName: 'Rosa', lastName: 'Díaz', role: UserRole.TECHNICIAN },
     { id: uuidv4(), email: 'visor@sigom.pe', password: 'viewer123', firstName: 'Ana', lastName: 'Visor', role: UserRole.VIEWER },
+    { id: uuidv4(), email: 'siscon-integration@sigom.internal', password: 'integration-disabled', firstName: 'SISCON', lastName: 'Integration', role: UserRole.SUPERVISOR },
   ];
 
   for (const u of users) {
@@ -161,7 +162,7 @@ async function main() {
     {
       id: uuidv4(), code: 'OT-2026-000012', type: WorkOrderType.CONSUMPTION_VERIFICATION, priority: WorkOrderPriority.HIGH, status: WorkOrderStatus.ASSIGNED,
       initialObservation: 'Consumo anómalo detectado por SISCON.',
-      sourceSystem: 'SISCON', incidentId: uuidv4(), incidentCode: 'INC-2026-00456',
+      sourceSystem: 'SISCON', sourceIncidentId: 'seed-incident-456', sourceIncidentCode: 'INC-2026-00456',
       zoneId: zones[2], createdById: supervisor1.id, assignedToId: tech4.id,
     },
   ];
