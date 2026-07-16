@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
@@ -11,6 +12,7 @@ import { MaintenancePlansModule } from './maintenance-plans/maintenance-plans.mo
 import { TechniciansModule } from './technicians/technicians.module';
 import { ReportsModule } from './reports/reports.module';
 import { IntegrationsModule } from './integrations/integrations.module';
+import { JwtAuthGuard, RolesGuard } from './auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -29,6 +31,12 @@ import { IntegrationsModule } from './integrations/integrations.module';
     TechniciansModule,
     ReportsModule,
     IntegrationsModule,
+  ],
+  providers: [
+    JwtAuthGuard,
+    RolesGuard,
+    { provide: APP_GUARD, useExisting: JwtAuthGuard },
+    { provide: APP_GUARD, useExisting: RolesGuard },
   ],
 })
 export class AppModule {}
