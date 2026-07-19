@@ -5,6 +5,8 @@ import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { HttpExceptionFilter } from '../src/common/filters/http-exception.filter';
 import { ResponseInterceptor } from '../src/common/interceptors/response.interceptor';
+import { JwtAuthGuard, RolesGuard } from '../src/auth/guards/jwt-auth.guard';
+import { OutboxService } from '../src/integrations/outbox.service';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -69,7 +71,12 @@ const mockPrisma = {
   orderAssignment: { create: jest.fn() },
   inspection: { count: jest.fn() },
   evidence: { findMany: jest.fn(), count: jest.fn() },
+  integrationOutbox: { create: jest.fn() },
   $transaction: jest.fn(),
+};
+
+const mockOutboxService = {
+  onModuleDestroy: jest.fn(),
 };
 
 // ---------------------------------------------------------------------------
@@ -85,6 +92,12 @@ describe('WorkOrders (e2e)', () => {
     })
       .overrideProvider(PrismaService)
       .useValue(mockPrisma)
+      .overrideProvider(JwtAuthGuard)
+      .useValue({ canActivate: () => true })
+      .overrideProvider(RolesGuard)
+      .useValue({ canActivate: () => true })
+      .overrideProvider(OutboxService)
+      .useValue(mockOutboxService)
       .compile();
 
     app = module.createNestApplication();
@@ -108,6 +121,21 @@ describe('WorkOrders (e2e)', () => {
   // =========================================================================
   // GET /api/v1/work-orders
   // =========================================================================
+
+  it('401 rejects an unauthenticated request in the real application guard', async () => {
+    const module = await Test.createTestingModule({ imports: [AppModule] })
+      .overrideProvider(PrismaService)
+      .useValue(mockPrisma)
+      .overrideProvider(OutboxService)
+      .useValue(mockOutboxService)
+      .compile();
+    const protectedApp = module.createNestApplication();
+    protectedApp.setGlobalPrefix('api/v1');
+    await protectedApp.init();
+
+    await request(protectedApp.getHttpServer()).get('/api/v1/work-orders').expect(401);
+    await protectedApp.close();
+  });
 
   describe('GET /api/v1/work-orders', () => {
     it('200 returns paginated response', async () => {
@@ -286,9 +314,7 @@ describe('WorkOrders (e2e)', () => {
 
     it('200 IN_FIELD → RESOLVED', async () => {
       mockPrisma.workOrder.findUnique.mockResolvedValue(workOrderFixture({ status: 'IN_FIELD' }));
-      mockPrisma.workOrder.update.mockResolvedValue(
-        workOrderFixture({ status: 'RESOLVED', ...resolveBody() }),
-      );
+      mockPrisma.workOrder.update.mockResolvedValue(workOrderFixture({ status: 'RESOLVED', ...resolveBody() }));
 
       const res = await request(app.getHttpServer())
         .patch(`/api/v1/work-orders/${UUIDS.workOrder}/resolve`)
@@ -327,6 +353,9 @@ describe('WorkOrders (e2e)', () => {
       );
       mockPrisma.inspection.count.mockResolvedValue(1);
       mockPrisma.workOrder.update.mockResolvedValue(workOrderFixture({ status: 'CLOSED' }));
+      mockPrisma.$transaction.mockImplementation(async (callback: (client: typeof mockPrisma) => unknown) =>
+        callback(mockPrisma),
+      );
 
       const res = await request(app.getHttpServer())
         .patch(`/api/v1/work-orders/${UUIDS.workOrder}/close`)

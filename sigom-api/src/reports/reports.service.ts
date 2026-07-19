@@ -27,9 +27,7 @@ export class ReportsService {
       }),
     ]);
 
-    const statusCount = Object.fromEntries(
-      byStatus.map((g) => [g.status, g._count.id]),
-    );
+    const statusCount = Object.fromEntries(byStatus.map((g) => [g.status, g._count.id]));
 
     return {
       data: {

@@ -9,11 +9,11 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
   const configService = app.get(ConfigService);
   const logger = new Logger('Bootstrap');
 
-  app.enableCors({ origin: 'http://localhost:5173', credentials: true });
+  app.enableCors({ origin: 'http://localhost:5174', credentials: true });
 
   app.setGlobalPrefix('api/v1', {
     exclude: ['api/docs', 'api/docs-json'],
