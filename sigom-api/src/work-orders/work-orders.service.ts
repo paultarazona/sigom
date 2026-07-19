@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
+import { Prisma, WorkOrderPriority, WorkOrderStatus, WorkOrderType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateWorkOrderDto } from './dto/create-work-order.dto';
 import { UpdateWorkOrderDto } from './dto/update-work-order.dto';
@@ -80,26 +81,32 @@ export class WorkOrdersService {
         throw err;
       }
     }
-    throw new ConflictException({ code: 'CODE_GENERATION_FAILED', message: 'No se pudo generar un código único. Intente nuevamente.' });
+    throw new ConflictException({
+      code: 'CODE_GENERATION_FAILED',
+      message: 'No se pudo generar un código único. Intente nuevamente.',
+    });
   }
 
   async findAll(query: QueryWorkOrderDto) {
     const { page = 1, limit = 20, sortBy, sortOrder, q, ...filters } = query;
     const skip = (page - 1) * limit;
 
-    const where: Record<string, unknown> = {};
+    const where: Prisma.WorkOrderWhereInput = {};
 
     if (filters.status) {
       const statuses = filters.status.split(',');
-      where.status = statuses.length === 1 ? statuses[0] : { in: statuses };
+      where.status =
+        statuses.length === 1
+          ? (statuses[0] as WorkOrderStatus)
+          : { in: statuses as WorkOrderStatus[] };
     }
 
     if (filters.priority) {
-      where.priority = filters.priority;
+      where.priority = filters.priority as WorkOrderPriority;
     }
 
     if (filters.type) {
-      where.type = filters.type;
+      where.type = filters.type as WorkOrderType;
     }
 
     if (filters.zoneId) {
@@ -123,7 +130,7 @@ export class WorkOrdersService {
     if (q) {
       where.OR = [
         { code: { contains: q, mode: 'insensitive' } },
-        { incidentCode: { contains: q, mode: 'insensitive' } },
+        { sourceIncidentCode: { contains: q, mode: 'insensitive' } },
         { initialObservation: { contains: q, mode: 'insensitive' } },
       ];
     }
@@ -132,7 +139,7 @@ export class WorkOrdersService {
 
     const [data, total] = await Promise.all([
       this.prisma.workOrder.findMany({
-        where: where as never,
+        where,
         skip,
         take: limit,
         orderBy,
@@ -141,7 +148,7 @@ export class WorkOrdersService {
           assignedTo: { select: { id: true, firstName: true, lastName: true } },
         },
       }),
-      this.prisma.workOrder.count({ where: where as never }),
+      this.prisma.workOrder.count({ where }),
     ]);
 
     return {
@@ -324,13 +331,38 @@ export class WorkOrdersService {
       });
     }
 
-    const updated = await this.prisma.workOrder.update({
-      where: { id },
-      data: {
-        status: 'CLOSED',
-        closedAt: new Date(),
-        closedById: userId,
-      },
+    const updated = await this.prisma.$transaction(async (client) => {
+      const closedAt = new Date();
+      const closed = await client.workOrder.update({
+        where: { id },
+        data: { status: 'CLOSED', closedAt, closedById: userId },
+      });
+
+      if (workOrder.sourceSystem === 'SISCON' && workOrder.sourceIncidentId) {
+        await client.integrationOutbox.create({
+          data: {
+            eventType: 'work-order.closed',
+            workOrderId: id,
+            payload: {
+              eventType: 'work-order.closed',
+              occurredAt: closedAt.toISOString(),
+              incident: {
+                externalId: workOrder.sourceIncidentId,
+                code: workOrder.sourceIncidentCode,
+              },
+              workOrder: {
+                id: closed.id,
+                code: closed.code,
+                status: closed.status,
+                finalDiagnosis: workOrder.finalDiagnosis,
+                solutionApplied: workOrder.solutionApplied,
+                closedAt: closedAt.toISOString(),
+              },
+            },
+          },
+        });
+      }
+      return closed;
     });
 
     return {

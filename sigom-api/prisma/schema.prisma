@@ -46,11 +46,20 @@ model WorkOrder {
   closedAt           DateTime?         @map("closed_at")
   cancelledAt        DateTime?         @map("cancelled_at")
   sourceSystem       String            @default("SIGOM") @map("source_system") @db.VarChar(20)
-  incidentId         String?           @map("incident_id") @db.Uuid
-  incidentCode       String?           @map("incident_code") @db.VarChar(20)
-  zoneId             String            @map("zone_id") @db.Uuid
-  supplyId           String?           @map("supply_id") @db.Uuid
-  meterId            String?           @map("meter_id") @db.Uuid
+  sourceIncidentId   String?           @map("source_incident_id") @db.VarChar(128)
+  sourceIncidentCode String?           @map("source_incident_code") @db.VarChar(64)
+  sourceIncidentType String?           @map("source_incident_type") @db.VarChar(100)
+  detectedAt         DateTime?         @map("detected_at")
+  sourceZoneId       String?           @map("source_zone_id") @db.VarChar(128)
+  sourceZoneName     String?           @map("source_zone_name") @db.VarChar(200)
+  sourceSupplyId     String?           @map("source_supply_id") @db.VarChar(128)
+  sourceSupplyCode   String?           @map("source_supply_code") @db.VarChar(128)
+  sourceMeterId      String?           @map("source_meter_id") @db.VarChar(128)
+  sourceMeterCode    String?           @map("source_meter_code") @db.VarChar(128)
+  addressSnapshot    String?           @map("address_snapshot") @db.VarChar(500)
+  zoneId             String?           @map("zone_id") @db.VarChar(128)
+  supplyId           String?           @map("supply_id") @db.VarChar(128)
+  meterId            String?           @map("meter_id") @db.VarChar(128)
   createdAt          DateTime          @default(now()) @map("created_at")
   updatedAt          DateTime          @updatedAt @map("updated_at")
   createdById        String            @map("created_by_id") @db.Uuid
@@ -60,6 +69,8 @@ model WorkOrder {
   evidence           Evidence[]
   inspections        Inspection[]
   assignments        OrderAssignment[]
+  integrationInbox   IntegrationInbox[]
+  integrationOutbox  IntegrationOutbox[]
   assignedTo         User?             @relation("AssignedTo", fields: [assignedToId], references: [id])
   cancelledBy        User?             @relation("CancelledBy", fields: [cancelledById], references: [id])
   closedBy           User?             @relation("ClosedBy", fields: [closedById], references: [id])
@@ -73,7 +84,46 @@ model WorkOrder {
   @@index([assignedToId])
   @@index([scheduledAt])
   @@index([createdAt])
+  @@unique([sourceSystem, sourceIncidentId])
   @@map("work_orders")
+}
+
+model IntegrationInbox {
+  id             String    @id @default(uuid()) @db.Uuid
+  sourceSystem   String    @map("source_system") @db.VarChar(20)
+  operation      String    @db.VarChar(100)
+  idempotencyKey String    @map("idempotency_key") @db.VarChar(128)
+  payloadHash    String    @map("payload_hash") @db.VarChar(64)
+  statusCode     Int?      @map("status_code")
+  responseBody   Json?     @map("response_body")
+  workOrderId    String?   @map("work_order_id") @db.Uuid
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  workOrder      WorkOrder? @relation(fields: [workOrderId], references: [id])
+
+  @@unique([sourceSystem, operation, idempotencyKey])
+  @@map("integration_inbox")
+}
+
+model IntegrationOutbox {
+  id            String            @id @default(uuid()) @db.Uuid
+  eventType     String            @map("event_type") @db.VarChar(100)
+  workOrderId   String            @map("work_order_id") @db.Uuid
+  payload       Json
+  status        OutboxStatus      @default(PENDING)
+  attemptCount  Int               @default(0) @map("attempt_count")
+  nextAttemptAt DateTime          @default(now()) @map("next_attempt_at")
+  lockedAt      DateTime?         @map("locked_at")
+  lockToken     String?           @map("lock_token") @db.Uuid
+  deliveredAt   DateTime?         @map("delivered_at")
+  lastError     String?           @map("last_error") @db.VarChar(1000)
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+  workOrder     WorkOrder         @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+
+  @@unique([eventType, workOrderId])
+  @@index([status, nextAttemptAt])
+  @@map("integration_outbox")
 }
 
 model OrderAssignment {
@@ -211,4 +261,11 @@ enum InspectionResult {
   CUSTOMER_ABSENT
   NO_ISSUE_FOUND
   ADDITIONAL_VISIT_REQUIRED
+}
+
+enum OutboxStatus {
+  PENDING
+  PROCESSING
+  DELIVERED
+  DEAD
 }

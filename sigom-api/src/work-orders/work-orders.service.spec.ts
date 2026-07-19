@@ -23,6 +23,9 @@ const mockPrisma = {
   inspection: {
     count: jest.fn(),
   },
+  integrationOutbox: {
+    create: jest.fn(),
+  },
   $transaction: jest.fn(),
 };
 
@@ -51,10 +54,7 @@ describe('WorkOrdersService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        WorkOrdersService,
-        { provide: PrismaService, useValue: mockPrisma },
-      ],
+      providers: [WorkOrdersService, { provide: PrismaService, useValue: mockPrisma }],
     }).compile();
 
     service = module.get<WorkOrdersService>(WorkOrdersService);
@@ -74,9 +74,7 @@ describe('WorkOrdersService', () => {
     });
 
     it('should throw ConflictException when transition from current status to ASSIGNED is invalid', async () => {
-      mockPrisma.workOrder.findUnique.mockResolvedValue(
-        makeWorkOrder({ status: 'IN_FIELD' }),
-      );
+      mockPrisma.workOrder.findUnique.mockResolvedValue(makeWorkOrder({ status: 'IN_FIELD' }));
 
       await expect(service.assign(WORK_ORDER_ID, dto)).rejects.toThrow(ConflictException);
     });
@@ -139,9 +137,7 @@ describe('WorkOrdersService', () => {
     });
 
     it('should throw ConflictException when transition to IN_FIELD is invalid', async () => {
-      mockPrisma.workOrder.findUnique.mockResolvedValue(
-        makeWorkOrder({ status: 'PENDING' }),
-      );
+      mockPrisma.workOrder.findUnique.mockResolvedValue(makeWorkOrder({ status: 'PENDING' }));
 
       await expect(service.start(WORK_ORDER_ID)).rejects.toThrow(ConflictException);
     });
@@ -173,9 +169,7 @@ describe('WorkOrdersService', () => {
     });
 
     it('should throw ConflictException when transition to SUSPENDED is invalid', async () => {
-      mockPrisma.workOrder.findUnique.mockResolvedValue(
-        makeWorkOrder({ status: 'ASSIGNED' }),
-      );
+      mockPrisma.workOrder.findUnique.mockResolvedValue(makeWorkOrder({ status: 'ASSIGNED' }));
 
       await expect(service.suspend(WORK_ORDER_ID)).rejects.toThrow(ConflictException);
     });
@@ -209,9 +203,7 @@ describe('WorkOrdersService', () => {
     });
 
     it('should throw ConflictException when transition to RESOLVED is invalid', async () => {
-      mockPrisma.workOrder.findUnique.mockResolvedValue(
-        makeWorkOrder({ status: 'ASSIGNED' }),
-      );
+      mockPrisma.workOrder.findUnique.mockResolvedValue(makeWorkOrder({ status: 'ASSIGNED' }));
 
       await expect(service.resolve(WORK_ORDER_ID, body)).rejects.toThrow(ConflictException);
     });
@@ -246,9 +238,7 @@ describe('WorkOrdersService', () => {
     });
 
     it('should throw ConflictException when transition to CLOSED is invalid', async () => {
-      mockPrisma.workOrder.findUnique.mockResolvedValue(
-        makeWorkOrder({ status: 'IN_FIELD' }),
-      );
+      mockPrisma.workOrder.findUnique.mockResolvedValue(makeWorkOrder({ status: 'IN_FIELD' }));
 
       await expect(service.close(WORK_ORDER_ID, USER_ID)).rejects.toThrow(ConflictException);
     });
@@ -309,6 +299,9 @@ describe('WorkOrdersService', () => {
       );
       mockPrisma.inspection.count.mockResolvedValue(2);
       mockPrisma.workOrder.update.mockResolvedValue(updatedOrder);
+      mockPrisma.$transaction.mockImplementation(async (callback: (client: typeof mockPrisma) => unknown) =>
+        callback(mockPrisma),
+      );
 
       const result = await service.close(WORK_ORDER_ID, USER_ID);
 
@@ -331,17 +324,13 @@ describe('WorkOrdersService', () => {
     });
 
     it('should throw ConflictException when transition to CANCELLED is invalid (IN_FIELD)', async () => {
-      mockPrisma.workOrder.findUnique.mockResolvedValue(
-        makeWorkOrder({ status: 'IN_FIELD' }),
-      );
+      mockPrisma.workOrder.findUnique.mockResolvedValue(makeWorkOrder({ status: 'IN_FIELD' }));
 
       await expect(service.cancel(WORK_ORDER_ID, USER_ID)).rejects.toThrow(ConflictException);
     });
 
     it('should throw ConflictException when transition to CANCELLED is invalid (RESOLVED)', async () => {
-      mockPrisma.workOrder.findUnique.mockResolvedValue(
-        makeWorkOrder({ status: 'RESOLVED' }),
-      );
+      mockPrisma.workOrder.findUnique.mockResolvedValue(makeWorkOrder({ status: 'RESOLVED' }));
 
       await expect(service.cancel(WORK_ORDER_ID, USER_ID)).rejects.toThrow(ConflictException);
     });

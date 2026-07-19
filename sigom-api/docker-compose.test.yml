@@ -1,0 +1,17 @@
+services:
+  db-test:
+    image: postgres:17-alpine
+    container_name: sigom-db-test
+    environment:
+      POSTGRES_USER: sigom_test
+      POSTGRES_PASSWORD: sigom_test
+      POSTGRES_DB: sigom_test
+    ports:
+      - '5433:5432'
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U sigom_test']
+      interval: 2s
+      timeout: 5s
+      retries: 10

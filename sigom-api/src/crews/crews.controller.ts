@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Delete,
-  Body,
-  Param,
-  Query,
-  ParseUUIDPipe,
-} from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, ParseUUIDPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CrewsService } from './crews.service';
 import { CreateCrewDto } from './dto/create-crew.dto';
@@ -47,10 +37,7 @@ export class CrewsController {
   }
 
   @Delete(':id/members/:userId')
-  removeMember(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Param('userId', ParseUUIDPipe) userId: string,
-  ) {
+  removeMember(@Param('id', ParseUUIDPipe) id: string, @Param('userId', ParseUUIDPipe) userId: string) {
     return this.crewsService.removeMember(id, userId);
   }
 }
