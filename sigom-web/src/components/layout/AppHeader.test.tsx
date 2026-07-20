@@ -45,7 +45,7 @@ describe('AppHeader', () => {
     )
 
     expect(screen.getByLabelText('Notificaciones')).toBeInTheDocument()
-    expect(screen.getByText('Supervisor')).toBeInTheDocument()
+    expect(screen.getByText('Usuario')).toBeInTheDocument()
     expect(screen.getByText('ENOSA')).toBeInTheDocument()
   })
 })

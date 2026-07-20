@@ -13,7 +13,10 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const logger = new Logger('Bootstrap');
 
-  app.enableCors({ origin: 'http://localhost:5174', credentials: true });
+  const corsOrigins = (configService.get<string>('CORS_ORIGIN') ?? 'http://localhost:5173,http://localhost:5174').split(
+    ',',
+  );
+  app.enableCors({ origin: corsOrigins, credentials: true });
 
   app.setGlobalPrefix('api/v1', {
     exclude: ['api/docs', 'api/docs-json'],
@@ -58,4 +61,4 @@ async function bootstrap() {
   logger.log(`Swagger docs available at http://localhost:${port}/api/docs`);
 }
 
-bootstrap();
+void bootstrap();

@@ -1,8 +1,17 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../prisma/prisma.service';
+
+function extractSessionCookie(request: { headers?: { cookie?: string } }) {
+  return (
+    request.headers?.cookie
+      ?.split('; ')
+      .find((cookie) => cookie.startsWith('sigom_session='))
+      ?.slice('sigom_session='.length) ?? null
+  );
+}
 
 interface JwtPayload {
   sub: string;
@@ -20,7 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!secret) throw new Error('JWT_SECRET debe estar configurado.');
 
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: extractSessionCookie,
       ignoreExpiration: false,
       secretOrKey: secret,
     });
