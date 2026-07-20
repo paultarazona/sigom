@@ -9,14 +9,13 @@ async function main() {
 
   // ─── USERS ────────────────────────────────────────
   const users = [
-    { id: uuidv4(), email: 'admin@sigom.pe', password: 'admin123', firstName: 'Admin', lastName: 'SIGOM', role: UserRole.ADMIN },
-    { id: uuidv4(), email: 'supervisor@sigom.pe', password: 'super123', firstName: 'Carlos', lastName: 'Reyes', role: UserRole.SUPERVISOR },
-    { id: uuidv4(), email: 'maria.lopez@sigom.pe', password: 'super123', firstName: 'María', lastName: 'López', role: UserRole.SUPERVISOR },
-    { id: uuidv4(), email: 'juan.perez@sigom.pe', password: 'tech123', firstName: 'Juan', lastName: 'Pérez', role: UserRole.TECHNICIAN },
-    { id: uuidv4(), email: 'luis.garcia@sigom.pe', password: 'tech123', firstName: 'Luis', lastName: 'García', role: UserRole.TECHNICIAN },
-    { id: uuidv4(), email: 'pedro.torres@sigom.pe', password: 'tech123', firstName: 'Pedro', lastName: 'Torres', role: UserRole.TECHNICIAN },
-    { id: uuidv4(), email: 'rosa.diaz@sigom.pe', password: 'tech123', firstName: 'Rosa', lastName: 'Díaz', role: UserRole.TECHNICIAN },
-    { id: uuidv4(), email: 'visor@sigom.pe', password: 'viewer123', firstName: 'Ana', lastName: 'Visor', role: UserRole.VIEWER },
+    { id: uuidv4(), email: 'admin@enosa.test', password: 'Admin123456', firstName: 'Administrador', lastName: 'ENOSA', role: UserRole.ADMIN },
+    { id: uuidv4(), email: 'ana.operaciones@enosa.test', password: 'Test123456', firstName: 'Ana', lastName: 'Operaciones', role: UserRole.SUPERVISOR },
+    { id: uuidv4(), email: 'luis.reportes@enosa.test', password: 'Test123456', firstName: 'Luis', lastName: 'Reportes', role: UserRole.VIEWER },
+    { id: uuidv4(), email: 'carlos.piura@enosa.test', password: 'Test123456', firstName: 'Carlos', lastName: 'Piura', role: UserRole.TECHNICIAN },
+    { id: uuidv4(), email: 'maria.sullana@enosa.test', password: 'Test123456', firstName: 'María', lastName: 'Sullana', role: UserRole.TECHNICIAN },
+    { id: uuidv4(), email: 'jorge.talara@enosa.test', password: 'Test123456', firstName: 'Jorge', lastName: 'Talara', role: UserRole.TECHNICIAN },
+    { id: uuidv4(), email: 'diana.tumbes@enosa.test', password: 'Test123456', firstName: 'Diana', lastName: 'Tumbes', role: UserRole.TECHNICIAN },
     { id: uuidv4(), email: 'siscon-integration@sigom.internal', password: 'integration-disabled', firstName: 'SISCON', lastName: 'Integration', role: UserRole.SUPERVISOR },
   ];
 
@@ -217,10 +216,10 @@ async function main() {
 
   console.log('\n🎉 Seed completado exitosamente.');
   console.log('Usuarios de prueba:');
-  console.log('  admin@sigom.pe / admin123 (ADMIN)');
-  console.log('  supervisor@sigom.pe / super123 (SUPERVISOR)');
-  console.log('  juan.perez@sigom.pe / tech123 (TECHNICIAN)');
-  console.log('  visor@sigom.pe / viewer123 (VIEWER)');
+  console.log('  admin@enosa.test / Admin123456 (ADMIN)');
+  console.log('  ana.operaciones@enosa.test / Test123456 (SUPERVISOR)');
+  console.log('  carlos.piura@enosa.test / Test123456 (TECHNICIAN)');
+  console.log('  luis.reportes@enosa.test / Test123456 (VIEWER)');
 }
 
 main()
