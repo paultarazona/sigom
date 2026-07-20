@@ -1,7 +1,7 @@
 import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OutboxStatus, Prisma } from '@prisma/client';
-import { createHmac, randomUUID } from 'crypto';
+import { createHash, createHmac, randomUUID } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -93,8 +93,10 @@ export class OutboxService implements OnModuleInit, OnModuleDestroy {
 
     const body = JSON.stringify(payload);
     const timestamp = new Date().toISOString();
+    const path = new URL(url).pathname;
+    const bodyHash = createHash('sha256').update(body).digest('hex');
     const signature = createHmac('sha256', secret)
-      .update(`POST\n${url}\n${timestamp}\n${eventId}\n${body}`)
+      .update(`POST\n${path}\n${timestamp}\n${eventId}\n${bodyHash}`)
       .digest('hex');
     const timeoutMs = Number(this.config.get('SISCON_TIMEOUT_MS', 5_000));
     const response = await fetch(url, {
@@ -104,7 +106,7 @@ export class OutboxService implements OnModuleInit, OnModuleDestroy {
         'Content-Type': 'application/json',
         'Idempotency-Key': eventId,
         'X-Request-Id': eventId,
-        'X-SISCON-Timestamp': timestamp,
+        'X-SIGOM-Timestamp': timestamp,
       },
       body,
       signal: AbortSignal.timeout(timeoutMs),

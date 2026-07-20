@@ -36,10 +36,12 @@ class SourceReferenceDto {
   @MaxLength(128)
   externalId: string;
 
+  @IsOptional()
   @IsString()
   @MaxLength(200)
   name?: string;
 
+  @IsOptional()
   @IsString()
   @MaxLength(128)
   code?: string;
