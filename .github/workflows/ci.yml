@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  sigom-api:
+    name: sigom-api
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      # sigom-api has no lockfile of its own — it's an npm workspace member,
+      # so `npm ci` must run from the repo root.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        working-directory: sigom-api
+        run: npx prisma generate
+
+      - name: Lint
+        working-directory: sigom-api
+        run: npm run lint
+
+      - name: Typecheck
+        working-directory: sigom-api
+        run: npm run typecheck
+
+      - name: Test
+        working-directory: sigom-api
+        run: npm run test
+
+      - name: Build
+        working-directory: sigom-api
+        run: npm run build
+
+  sigom-web:
+    name: sigom-web
+    runs-on: ubuntu-latest
+    env:
+      VITE_API_URL: http://localhost:3001/api/v1
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: sigom-web/package-lock.json
+
+      - name: Install dependencies
+        working-directory: sigom-web
+        run: npm ci
+
+      - name: Lint
+        working-directory: sigom-web
+        run: npm run lint
+
+      - name: Test
+        working-directory: sigom-web
+        run: npm run test
+
+      - name: Build
+        working-directory: sigom-web
+        run: npm run build
